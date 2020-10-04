@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'io.ratpack.ratpack-java' version '1.8.0'
+}
+
+group 'org.fpeterek'
+version '0.1'
+
+targetCompatibility = '14'
+sourceCompatibility = '14'
+
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'org.slf4j:slf4j-simple:1.7.30'
+}
+
+compileJava {
+    options.compilerArgs += ['--enable-preview']
+}
+
+tasks.withType(JavaCompile).each {
+    it.options.compilerArgs += '--enable-preview'
+}
+
+tasks.withType(Test).all {
+    jvmArgs += '--enable-preview'
+}
+
+tasks.withType(JavaExec) {
+    jvmArgs += '--enable-preview'
+}
+
+mainClassName = 'org.fpeterek.flightlidar48.Main'
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.fpeterek.flightlidar48.Main'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
