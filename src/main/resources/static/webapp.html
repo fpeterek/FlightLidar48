@@ -3,10 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>FlightLidar48</title>
+
+	<script src="https://api.mapy.cz/loader.js"></script>
+	<script>Loader.load()</script>
 </head>
 <body>
 
     <div id="flight_search"></div>
+
+    <div id="mapa" style="width:600px; height:400px;"></div>
+	<script type="text/javascript">
+		var stred = SMap.Coords.fromWGS84(18.16, 49.83);
+		var mapa = new SMap(JAK.gel("mapa"), stred, 8);
+		mapa.addDefaultLayer(SMap.DEF_BASE).enable();
+		mapa.addDefaultControls();
+	</script>
 
     <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
