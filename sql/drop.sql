@@ -1,0 +1,7 @@
+DROP TABLE aircraft CASCADE;
+DROP TABLE flight CASCADE;
+DROP TABLE current_flight CASCADE;
+DROP TABLE airport CASCADE;
+DROP TABLE airline CASCADE;
+DROP TABLE aircraft_type CASCADE;
+DROP TABLE country CASCADE;

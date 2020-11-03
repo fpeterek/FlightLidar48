@@ -1,4 +1,4 @@
-package org.fpeterek.flightlidar48;
+package org.fpeterek.flightlidar48.records;
 
 public record Airport(
     String icao,

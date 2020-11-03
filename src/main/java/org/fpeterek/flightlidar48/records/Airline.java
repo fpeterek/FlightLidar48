@@ -1,4 +1,4 @@
-package org.fpeterek.flightlidar48;
+package org.fpeterek.flightlidar48.records;
 
 import java.util.List;
 
