@@ -1,13 +1,15 @@
 package org.fpeterek.flightlidar48;
 
+import org.joda.time.DateTime;
+
 public record Flight(
-        String number,
-        Airport origin,
-        Airport destination,
-        Aircraft aircraft,
-        double lat,
-        double lon,
-        int squawk,
-        int groundspeed,
-        int altitude) {
+    int id,
+    String number,
+    DateTime departure,
+    DateTime arrival,
+    Airport origin,
+    Airport destination,
+    Aircraft aircraft,
+    CurrentFlight currentFlight
+) {
 }
