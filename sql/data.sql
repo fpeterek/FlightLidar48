@@ -48,6 +48,226 @@ INSERT INTO airline (designator, airline_name) VALUES ('OK', 'CSA');
 INSERT INTO airline (designator, airline_name) VALUES ('QS', 'Smartwings');
 INSERT INTO airline (designator, airline_name) VALUES ('SQ', 'Singapore Airlines');
 
+
 INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
-VALUES ();
+    VALUES('D-HXRO', 1, 'LH', 'A388', '2010-03-23');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('D-QPWJ', 2, 'LH', 'A359', '2017-07-05');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('D-LHTH', 3, 'LH', 'A359', '2018-04-22');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('D-ECBD', 4, 'LH', 'A320', '2016-07-02');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('D-HJZJ', 1, 'LH', 'B748', '2014-01-05');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('D-BYHE', 5, 'LH', 'A320', '2016-04-18');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('D-QUPS', 6, 'LH', 'A321', '2018-06-13');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('D-GHZT', 2, 'LH', 'B748', '2018-11-13');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('D-ZUQX', 7, 'LH', 'A359', '2018-09-11');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('D-YVFR', 8, 'LH', 'A321', '2018-10-11');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('HB-YXK', 9, 'LX', 'A320', '2019-09-12');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('HB-ASF', 10, 'LX', 'BCS1', '2016-07-23');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('HB-OTF', 11, 'LX', 'A320', '2016-08-12');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('HB-ZNE', 12, 'LX', 'BCS3', '2018-08-05');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('HB-DVV', 13, 'LX', 'BCS1', '2018-12-25');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('HB-IWO', 3, 'LX', 'B77W', '2007-09-05');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('HB-RAJ', 4, 'LX', 'B77W', '2011-04-22');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('HB-HRS', 14, 'LX', 'BCS1', '2019-02-09');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('HB-HZF', 5, 'LX', 'B77W', '2015-07-04');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('HB-CXB', 15, 'LX', 'BCS1', '2017-07-23');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('A6-VYM', 16, 'EK', 'A388', '2018-09-15');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('A6-GWF', 17, 'EK', 'A388', '2016-05-11');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('A6-YNI', 18, 'EK', 'A388', '2014-08-02');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('A6-BBA', 6, 'EK', 'B77W', '2011-12-10');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('A6-FUG', 7, 'EK', 'B77W', '2009-01-15');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('A6-ETT', 19, 'EK', 'A388', '2010-01-05');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('A6-HES', 8, 'EK', 'B77W', '2008-06-06');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('A6-PPK', 20, 'EK', 'A388', '2015-04-10');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('A6-LKX', 21, 'EK', 'A388', '2011-04-03');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('A6-YPO', 22, 'EK', 'A388', '2015-04-13');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-XUCA', 23, 'DL', 'BCS3', '2017-06-01');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-QTUW', 24, 'DL', 'A35K', '2018-09-11');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-DMPQ', 25, 'DL', 'A320', '2019-08-05');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-HNGX', 26, 'DL', 'A35K', '2019-06-27');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-LCCI', 27, 'DL', 'A320', '2016-08-02');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-WFXT', 28, 'DL', 'BCS3', '2018-06-10');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-NLLR', 29, 'DL', 'BCS3', '2016-02-22');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-SHGX', 30, 'DL', 'BCS3', '2019-04-21');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-XSUR', 31, 'DL', 'A35K', '2018-11-26');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-GOIM', 32, 'DL', 'A320', '2017-03-12');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-QHFO', 33, 'AA', 'A320', '2016-09-11');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-IUUF', 9, 'AA', 'B738', '2013-06-02');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-SNMO', 10, 'AA', 'B77W', '2006-10-19');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-TLNI', 11, 'AA', 'B788', '2017-08-05');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-CIFD', 34, 'AA', 'A320', '2018-08-17');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-DGOK', 12, 'AA', 'B788', '2016-04-04');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-TEOO', 13, 'AA', 'B77W', '2011-12-01');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-FNXK', 14, 'AA', 'B77W', '2018-05-12');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-ZANN', 35, 'AA', 'A320', '2019-09-12');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('N-GPUX', 36, 'AA', 'A320', '2017-11-19');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('F-NYRH', 37, 'AF', 'A388', '2017-09-28');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('F-VCTC', 38, 'AF', 'A388', '2014-04-03');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('F-LBXF', 39, 'AF', 'A35K', '2019-04-03');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('F-YWKV', 40, 'AF', 'A388', '2015-04-18');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('F-VRMN', 15, 'AF', 'B77W', '2014-10-26');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('F-DKYF', 41, 'AF', 'A35K', '2019-08-07');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('F-QJNZ', 16, 'AF', 'B77W', '2014-12-11');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('F-ROLV', 42, 'AF', 'A388', '2016-11-08');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('F-CSFX', 17, 'AF', 'B77W', '2015-04-25');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('F-DRRY', 43, 'AF', 'A359', '2018-04-08');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('C-YTSD', 18, 'AC', 'B738', '2000-08-27');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('C-SKYK', 19, 'AC', 'B738', '2001-04-17');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('C-IUSH', 20, 'AC', 'B788', '2014-01-13');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('C-BHDP', 21, 'AC', 'B788', '2015-04-01');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('C-UNFG', 22, 'AC', 'B738', '2011-10-15');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('C-YTBW', 23, 'AC', 'B788', '2015-05-05');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('C-WSXE', 24, 'AC', 'B738', '2012-12-23');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('C-ZZQO', 25, 'AC', 'B738', '2012-02-26');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('C-JNLE', 26, 'AC', 'B788', '2011-01-08');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('C-HLOW', 27, 'AC', 'B738', '2000-10-23');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('G-JVPJ', 44, 'BA', 'A320', '2017-02-22');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('G-HHOH', 45, 'BA', 'A388', '2012-05-26');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('G-MYXS', 46, 'BA', 'A388', '2010-07-04');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('G-MWWN', 47, 'BA', 'A320', '2017-06-18');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('G-DWCF', 48, 'BA', 'A321', '2019-12-05');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('G-ZERJ', 49, 'BA', 'A35K', '2018-07-21');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('G-ICZB', 50, 'BA', 'A320', '2018-01-16');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('G-IFEO', 51, 'BA', 'A321', '2019-02-03');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('G-KYXZ', 52, 'BA', 'A321', '2017-09-07');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('G-ZZDX', 28, 'BA', 'B77W', '2013-03-03');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-YJI', 53, 'OK', 'BCS3', '2018-03-15');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-MEH', 54, 'OK', 'A320', '2017-09-16');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-RTE', 55, 'OK', 'BCS3', '2017-09-02');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-PSH', 29, 'OK', 'B738', '2009-04-12');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-OBV', 56, 'OK', 'BCS3', '2016-01-24');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-XER', 57, 'OK', 'A320', '2017-09-17');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-HHM', 58, 'OK', 'BCS3', '2019-08-20');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-WOV', 59, 'OK', 'BCS3', '2017-12-22');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-HSL', 30, 'OK', 'B738', '2001-09-18');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-TUV', 60, 'OK', 'A320', '2016-10-16');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-TXN', 31, 'QS', 'B738', '2008-03-20');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-HZZ', 32, 'QS', 'B738', '2001-10-14');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-QCP', 33, 'QS', 'B738', '2019-03-14');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-QVG', 34, 'QS', 'B738', '2007-05-08');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-RMT', 35, 'QS', 'B738', '2008-12-10');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-KAB', 36, 'QS', 'B738', '2013-04-28');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-RQW', 37, 'QS', 'B738', '2007-06-01');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-HHQ', 38, 'QS', 'B738', '2004-02-01');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-MUS', 39, 'QS', 'B738', '2016-04-21');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('OK-SUK', 40, 'QS', 'B738', '2006-09-03');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('9V-JOZ', 41, 'SQ', 'B77W', '2007-12-20');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('9V-DTE', 61, 'SQ', 'A35K', '2018-02-24');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('9V-OOK', 62, 'SQ', 'A35K', '2019-07-24');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('9V-URH', 42, 'SQ', 'B788', '2017-05-05');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('9V-SKH', 63, 'SQ', 'A388', '2011-04-18');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('9V-XLH', 64, 'SQ', 'A35K', '2018-04-25');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('9V-CWU', 43, 'SQ', 'B788', '2019-07-06');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('9V-ELE', 65, 'SQ', 'A359', '2017-03-23');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('9V-HTP', 66, 'SQ', 'A35K', '2018-08-10');
+INSERT INTO aircraft (registration, msn, airline, type_designator, first_flight)
+    VALUES('9V-FSH', 67, 'SQ', 'A359', '2018-06-05');
+
 
