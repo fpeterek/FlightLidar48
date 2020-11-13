@@ -6,6 +6,7 @@ public record Airport(
     String name,
     double lat,
     double lon,
+    int countryId,
     Country country
 ) {
 }

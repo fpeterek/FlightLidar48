@@ -1,7 +1,8 @@
 package org.fpeterek.flightlidar48.records;
 
 public record CurrentFlight(
-    int id,
+    long id,
+    long flightId,
     Flight flight,
     double lat,
     double lon,

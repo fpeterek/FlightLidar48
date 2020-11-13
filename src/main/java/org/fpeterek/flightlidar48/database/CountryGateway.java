@@ -2,31 +2,26 @@ package org.fpeterek.flightlidar48.database;
 
 import org.fpeterek.flightlidar48.records.Country;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class CountryGateway {
+public class CountryGateway extends Gateway {
 
-  private final Connection conn;
-  private final String baseQuery = "SELECT id, country_name, airport_prefix, registration_prefix FROM country";
+  @Override
+  protected final String baseQuery() {
+    return "SELECT id, country_name, airport_prefix, registration_prefix FROM country";
+  }
 
   public CountryGateway() throws SQLException {
-    conn = DriverManager.getConnection(
-      "jdbc:postgresql://localhost:5432/flightlidar",
-      "fpeterek",
-      ""
-    );
+    super();
   }
 
   public CountryGateway(String url, String user, String password) throws SQLException {
-    conn = DriverManager.getConnection(url, user, password);
+    super(url, user, password);
   }
 
-  private Country extractOne(ResultSet rs) throws SQLException {
+  protected Country extractOne(ResultSet rs) throws SQLException {
     final var id = rs.getInt("id");
     final var name = rs.getString("country_name");
     final var airportPrefix = rs.getString("airport_prefix");
@@ -36,18 +31,7 @@ public class CountryGateway {
   }
 
   public List<Country> get() throws SQLException {
-
-    final var stmt = conn.createStatement();
-    final var res = new ArrayList<Country>();
-    final var sql = baseQuery + ";";
-
-    var set = stmt.executeQuery(sql);
-
-    while(set.next()) {
-      res.add(extractOne(set));
-    }
-
-    return res;
+    return (List)getAll();
   }
 
 }
