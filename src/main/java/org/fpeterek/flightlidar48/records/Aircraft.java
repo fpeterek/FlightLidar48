@@ -12,7 +12,7 @@ public record Aircraft(
     String airlineDesignator,
     Airline airline,
     String typeDesignator,
-    AircrafType type,
+    AircraftType type,
     LocalDate firstFlight,
     List<Flight> flights) {
 
@@ -21,6 +21,21 @@ public record Aircraft(
     final var then = firstFlight.toDateTimeAtStartOfDay();
     final var diff = new Duration(then, now);
     return (int)(diff.getStandardDays() / 365);
+  }
+
+  public void addFlight(Flight fl) throws RuntimeException {
+    if (!fl.aircraftRegistration().equals(registration)) {
+      throw new RuntimeException("Flight was operated by '" + fl.aircraftRegistration() + "', not '" + registration + "'");
+    }
+    flights.add(fl);
+  }
+
+  public Aircraft addAirline(Airline al) {
+    return new Aircraft(registration, msn, al.designator(), al, type.designator(), type, firstFlight, flights);
+  }
+
+  public Aircraft addType(AircraftType type) {
+    return new Aircraft(registration, msn, airlineDesignator, airline, type.designator(), type, firstFlight, flights);
   }
 
 }

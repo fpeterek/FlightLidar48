@@ -1,7 +1,9 @@
 package org.fpeterek.flightlidar48.database;
 
+import org.fpeterek.flightlidar48.records.Airport;
 import org.fpeterek.flightlidar48.records.Country;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -32,6 +34,27 @@ public class CountryGateway extends Gateway {
 
   public List<Country> get() throws SQLException {
     return (List)getAll();
+  }
+
+  public Airport withCountry(Airport ap) throws SQLException {
+
+    final var query = baseQuery() + " WHERE id=%;";
+    PreparedStatement stmt = conn.prepareStatement(query);
+    stmt.setLong(1, ap.countryId());
+
+    var rs = stmt.executeQuery();
+
+    if (rs.next()) {
+      ap = ap.addCountry(extractOne(rs));
+    }
+    return ap;
+
+  }
+
+  public void setCountries(List<Airport> airports) throws SQLException {
+    for (int i = 0; i < airports.size(); ++i) {
+      airports.set(i, withCountry(airports.get(i)));
+    }
   }
 
 }

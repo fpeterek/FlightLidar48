@@ -1,8 +1,11 @@
 package org.fpeterek.flightlidar48.database;
 
+import org.fpeterek.flightlidar48.records.Aircraft;
+import org.fpeterek.flightlidar48.records.CurrentFlight;
 import org.fpeterek.flightlidar48.records.Flight;
 import org.joda.time.DateTime;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -39,6 +42,46 @@ public class FlightGateway extends Gateway {
       id, number, jodaDeparture, jodaArrival, origin, null, destination, null,
       aircraft, null, currentFlight, null
     );
+  }
+
+  public void flightsFor(Aircraft aircraft) throws SQLException, RuntimeException {
+    final var query = baseQuery() + " WHERE aircraft = ?;";
+    PreparedStatement stmt = conn.prepareStatement(query);
+    stmt.setString(1, aircraft.registration());
+
+    var rs = stmt.executeQuery();
+
+    while (rs.next()) {
+      aircraft.addFlight(extractOne(rs));
+    }
+
+  }
+
+  public void flightsForAll(List<Aircraft> aircraft) throws SQLException, RuntimeException {
+    for (var ac : aircraft) {
+      flightsFor(ac);
+    }
+  }
+
+  public CurrentFlight withFlight(CurrentFlight cf) throws SQLException {
+
+    final var query = baseQuery() + " WHERE current_flight=%;";
+    PreparedStatement stmt = conn.prepareStatement(query);
+    stmt.setLong(1, cf.id());
+
+    var rs = stmt.executeQuery();
+
+    if (rs.next()) {
+      cf = cf.addFlight(extractOne(rs));
+    }
+    return cf;
+
+  }
+
+  public void setFlights(List<CurrentFlight> flights) throws SQLException {
+    for (int i = 0; i < flights.size(); ++i) {
+      flights.set(i, withFlight(flights.get(i)));
+    }
   }
 
   public List<Flight> get() throws SQLException {

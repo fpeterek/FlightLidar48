@@ -9,4 +9,7 @@ public record Airport(
     int countryId,
     Country country
 ) {
+  public Airport addCountry(Country c) {
+    return new Airport(icao, iata, name, lat, lon, c.id(), c);
+  }
 }

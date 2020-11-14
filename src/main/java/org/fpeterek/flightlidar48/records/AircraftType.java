@@ -1,6 +1,6 @@
 package org.fpeterek.flightlidar48.records;
 
-public record AircrafType(
+public record AircraftType(
     String designator,
     String manufacturer,
     String family,

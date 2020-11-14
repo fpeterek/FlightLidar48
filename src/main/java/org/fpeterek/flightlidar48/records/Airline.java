@@ -7,4 +7,10 @@ public record Airline(
     String name,
     List<Aircraft> fleet
 ) {
+  public void addToFleet(Aircraft ac) {
+    if (!ac.airlineDesignator().equals(designator)) {
+      throw new RuntimeException("Aircraft " + ac.registration() + " doesn't belong to " + name);
+    }
+    fleet.add(ac);
+  }
 }

@@ -11,4 +11,9 @@ public record CurrentFlight(
     double direction,
     int groundspeed
 ) {
+
+  public CurrentFlight addFlight(Flight fl) {
+    return new CurrentFlight(id, fl.id(), fl, lat, lon, squawk, altitude, direction, groundspeed);
+  }
+
 }
