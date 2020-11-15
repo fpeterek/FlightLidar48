@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
 }
 
-group 'org.fpeterek'
+group 'org.fpeterek.flightlidar48.generator'
 version '1.0'
 
 repositories {
@@ -11,6 +11,19 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    compile "org.jetbrains.kotlin:kotlin-stdlib"
+    compile 'joda-time:joda-time:2.10.8'
+    compile 'org.json:json:20200518'
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+// mainClassName = 'org.fpeterek.flightlidar48.generator.MainKt'
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.fpeterek.flightlidar48.generator.MainKt'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
