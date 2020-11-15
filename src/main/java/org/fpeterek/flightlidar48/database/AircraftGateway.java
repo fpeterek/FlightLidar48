@@ -67,14 +67,14 @@ public class AircraftGateway extends Gateway {
 
   public Airline addFleet(Airline airline) throws SQLException {
 
-    final var query = baseQuery() + " WHERE airline=%;";
+    final var query = baseQuery() + " WHERE airline=?;";
     PreparedStatement stmt = conn.prepareStatement(query);
     stmt.setString(1, airline.designator());
 
     var rs = stmt.executeQuery();
 
     while (rs.next()) {
-      airline.addToFleet(extractOne(rs));
+      airline.addToFleet(extractOne(rs).addAirline(airline));
     }
 
     return airline;

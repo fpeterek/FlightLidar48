@@ -40,7 +40,7 @@ public class AirportGateway extends Gateway {
 
   public Flight withAirports(Flight flight) throws SQLException {
 
-    final var query = baseQuery() + " WHERE icao=% or icao=%;";
+    final var query = baseQuery() + " WHERE icao=? or icao=?;";
     PreparedStatement stmt = conn.prepareStatement(query);
     stmt.setString(1, flight.originIcao());
     stmt.setString(2, flight.destinationIcao());

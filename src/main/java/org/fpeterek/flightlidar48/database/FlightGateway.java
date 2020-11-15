@@ -52,7 +52,7 @@ public class FlightGateway extends Gateway {
     var rs = stmt.executeQuery();
 
     while (rs.next()) {
-      aircraft.addFlight(extractOne(rs));
+      aircraft.addFlight(extractOne(rs).setAircraft(aircraft));
     }
 
   }
@@ -65,14 +65,14 @@ public class FlightGateway extends Gateway {
 
   public CurrentFlight withFlight(CurrentFlight cf) throws SQLException {
 
-    final var query = baseQuery() + " WHERE current_flight=%;";
+    final var query = baseQuery() + " WHERE current_flight=?;";
     PreparedStatement stmt = conn.prepareStatement(query);
     stmt.setLong(1, cf.id());
 
     var rs = stmt.executeQuery();
 
     if (rs.next()) {
-      cf = cf.addFlight(extractOne(rs));
+      cf = cf.addFlight(extractOne(rs).setCurrentFlight(cf));
     }
     return cf;
 

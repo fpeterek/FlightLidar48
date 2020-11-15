@@ -38,7 +38,7 @@ public class AircraftTypeGateway extends Gateway {
 
   public Aircraft withType(Aircraft ac) throws SQLException {
 
-    final var query = baseQuery() + " WHERE designator=%;";
+    final var query = baseQuery() + " WHERE designator=?;";
     PreparedStatement stmt = conn.prepareStatement(query);
     stmt.setString(1, ac.typeDesignator());
 

@@ -42,14 +42,14 @@ public class CurrentFlightGateway extends Gateway {
       return fl;
     }
 
-    final var query = baseQuery() + " WHERE flight=%;";
+    final var query = baseQuery() + " WHERE flight=?;";
     PreparedStatement stmt = conn.prepareStatement(query);
     stmt.setLong(1, fl.id());
 
     var rs = stmt.executeQuery();
 
     if (rs.next()) {
-      fl = fl.setCurrentFlight(extractOne(rs));
+      fl = fl.setCurrentFlight(extractOne(rs).addFlight(fl));
     }
     return fl;
 

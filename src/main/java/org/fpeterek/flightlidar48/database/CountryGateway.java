@@ -38,7 +38,7 @@ public class CountryGateway extends Gateway {
 
   public Airport withCountry(Airport ap) throws SQLException {
 
-    final var query = baseQuery() + " WHERE id=%;";
+    final var query = baseQuery() + " WHERE id=?;";
     PreparedStatement stmt = conn.prepareStatement(query);
     stmt.setLong(1, ap.countryId());
 

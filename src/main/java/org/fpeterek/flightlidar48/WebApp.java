@@ -1,5 +1,5 @@
 package org.fpeterek.flightlidar48;
-
+/*
 import org.fpeterek.flightlidar48.database.CountryGateway;
 import org.fpeterek.flightlidar48.records.Country;
 import org.json.JSONArray;
@@ -50,3 +50,4 @@ public class WebApp {
   }
 
 }
+*/
