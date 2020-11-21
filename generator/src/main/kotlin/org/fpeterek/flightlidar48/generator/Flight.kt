@@ -1,5 +1,8 @@
 package org.fpeterek.flightlidar48.generator
 
+import org.json.JSONObject
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 import kotlin.random.Random
 
 data class Flight(
@@ -27,7 +30,7 @@ data class Flight(
             get() = this != None
     }
 
-    private var bank = when (Random.nextInt(-1, 1)) {
+    private val bank = when (Random.nextInt(-1, 1)) {
         -1   -> Bank.Left
         1    -> Bank.Right
         else -> Bank.None
@@ -70,5 +73,30 @@ data class Flight(
         bankAircraft(dt)
         move(dt)
     }
+
+    private val roundedDir
+        get() = (direction * 100).roundToInt() / 100.0
+
+    private fun roundCoordinate(coor: Double) = (coor * 10_000_000).roundToLong() / 10_000_000.0
+
+    private val roundedLat
+        get() = roundCoordinate(lat)
+
+    private val roundedLon
+        get() = roundCoordinate(lon)
+
+    override fun toString() =
+        JSONObject()
+            .put("number", number)
+            .put("aircraft", aircraft)
+            .put("lat", roundedLat)
+            .put("lon", roundedLon)
+            .put("squawk", squawk)
+            .put("altitude", altitude)
+            .put("direction", roundedDir)
+            .put("speed", speed)
+            .put("origin", origin)
+            .put("destination", destination)
+            .toString()
 
 }
