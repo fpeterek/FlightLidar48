@@ -85,8 +85,7 @@ data class Flight(
     private val roundedLon
         get() = roundCoordinate(lon)
 
-    override fun toString() =
-        JSONObject()
+    fun toJson() = JSONObject()
             .put("number", number)
             .put("aircraft", aircraft)
             .put("lat", roundedLat)
@@ -97,6 +96,7 @@ data class Flight(
             .put("speed", speed)
             .put("origin", origin)
             .put("destination", destination)
-            .toString()
+
+    override fun toString() = toJson().toString()
 
 }

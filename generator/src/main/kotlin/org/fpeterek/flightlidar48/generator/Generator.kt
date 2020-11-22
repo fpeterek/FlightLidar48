@@ -92,7 +92,6 @@ object Generator {
 
             startTime = current
         }
-
     }
 
 }

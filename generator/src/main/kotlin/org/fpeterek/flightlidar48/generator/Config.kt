@@ -53,5 +53,6 @@ object Config {
     val topic = getString("TOPIC", "receiver-input-topic")
     val brokerList = getString("BROKER_LIST", "127.0.0.1:9092")
     val producerId = getString("PRODUCER_ID", "RandomDataGenerator")
+    val receiverId = getInt("RECEIVER_ID", 1)
     val writeToStdout = getBool("WRITE_TO_STDOUT", false)
 }
