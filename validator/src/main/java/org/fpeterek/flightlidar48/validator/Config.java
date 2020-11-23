@@ -67,15 +67,18 @@ public class Config {
     return value.equals("true") || value.equals("1");
   }
 
-  final String inputTopic;
-  final String outputTopic;
-  final String brokerList;
-  final String consumerId;
-  final String producerId;
-  final String locality;
-  final boolean writeToStdout;
+  public final String inputTopic;
+  public final String outputTopic;
+  public final String brokerList;
+  public final String consumerId;
+  public final String producerId;
+  public final String locality;
+  public final boolean writeToStdout;
+  public final int ddosThreshold;
+  public final int assessmentThreshold;
 
-  private Config(String input, String output, String brokers, String consId, String prodId, String loc, boolean stdout) {
+  private Config(String input, String output, String brokers, String consId, String prodId, String loc, boolean stdout,
+                 int ddos, int assessment) {
     inputTopic = input;
     outputTopic = output;
     brokerList = brokers;
@@ -83,6 +86,8 @@ public class Config {
     producerId = prodId;
     locality = loc;
     writeToStdout = stdout;
+    ddosThreshold = ddos;
+    assessmentThreshold = assessment;
   }
 
   private Config() {
@@ -93,7 +98,9 @@ public class Config {
       getString("PRODUCER_ID", "ReceiverInputValidator"),
       getString("CONSUMER_ID", "ReceiverInputValidator"),
       getString("LOCALITY", "dev"),
-      getBool("WRITE_TO_STDOUT", false)
+      getBool("WRITE_TO_STDOUT", false),
+      getInt("DDOS_THRESHOLD", 5),
+      getInt("ASSESSMENT_THRESHOLD", 1000)
     );
   }
 
