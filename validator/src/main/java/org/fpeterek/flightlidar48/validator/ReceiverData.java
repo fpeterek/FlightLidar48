@@ -11,6 +11,7 @@ public class ReceiverData {
   private long firstTs = 0;
   private long validReq = 0;
   private long totalReq = 0;
+  private boolean notifiable = true;
 
   private final Lock lock = new ReentrantLock();
 
@@ -30,6 +31,7 @@ public class ReceiverData {
   private void addRequestLocked(boolean valid) {
     updateTs();
     updateReqCount(valid);
+    updateNotifiable();
   }
 
   private void updateTs() {
@@ -43,6 +45,30 @@ public class ReceiverData {
       ++validReq;
     }
     ++totalReq;
+  }
+
+  private void updateNotifiable() {
+    if (calcValidPercentage() >= 70) {
+      notifiable = true;
+    }
+  }
+
+  public void setNotified() {
+    try {
+      lock.lock();
+      notifiable = false;
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  public boolean isNotifiable() {
+    try {
+      lock.lock();
+      return notifiable;
+    } finally {
+      lock.unlock();
+    }
   }
 
   private long calcInvalidRequests() {

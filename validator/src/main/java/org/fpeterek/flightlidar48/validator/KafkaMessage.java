@@ -33,8 +33,8 @@ public record KafkaMessage(
     int altitude = data.getInt("altitude");
     double direction = data.getDouble("direction");
     int speed = data.getInt("speed");
-    String orig = data.getString("orig");
-    String dest = data.getString("dest");
+    String orig = data.getString("origin");
+    String dest = data.getString("destination");
 
     return new KafkaMessage(reciever, ts, flight, aircraft, lat, lon, squawk, altitude, direction, speed, orig, dest);
 

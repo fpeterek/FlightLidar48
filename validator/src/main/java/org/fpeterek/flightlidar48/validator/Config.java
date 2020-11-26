@@ -76,9 +76,12 @@ public class Config {
   public final boolean writeToStdout;
   public final int ddosThreshold;
   public final int assessmentThreshold;
+  public final int threads;
+  public final String emailUser;
+  public final String emailPassword;
 
   private Config(String input, String output, String brokers, String consId, String prodId, String loc, boolean stdout,
-                 int ddos, int assessment) {
+                 int ddos, int assessment, int streamsThreads, String user, String passwd) {
     inputTopic = input;
     outputTopic = output;
     brokerList = brokers;
@@ -88,19 +91,25 @@ public class Config {
     writeToStdout = stdout;
     ddosThreshold = ddos;
     assessmentThreshold = assessment;
+    threads = streamsThreads;
+    emailUser = user;
+    emailPassword = passwd;
   }
 
   private Config() {
     this(
-      getString("INPUT_TOPIC", "receiver-input-topic-" + getString("LOCALITY", "dev")),
-      getString("OUTPUT_TOPIC", "validated-input-topic-" + getString("LOCALITY", "dev")),
+      getString("INPUT_TOPIC", "receiver-input-topic") + "-" + getString("LOCALITY", "dev"),
+      getString("OUTPUT_TOPIC", "validated-input-topic") + "-" + getString("LOCALITY", "dev"),
       getString("BROKER_LIST", "127.0.0.1:9092"),
       getString("PRODUCER_ID", "ReceiverInputValidator"),
       getString("CONSUMER_ID", "ReceiverInputValidator"),
       getString("LOCALITY", "dev"),
       getBool("WRITE_TO_STDOUT", false),
       getInt("DDOS_THRESHOLD", 5),
-      getInt("ASSESSMENT_THRESHOLD", 1000)
+      getInt("ASSESSMENT_THRESHOLD", 1000),
+      getInt("THREADS", 3),
+      getString("EMAIL_USER"),
+      getString("EMAIL_PASSWORD")
     );
   }
 

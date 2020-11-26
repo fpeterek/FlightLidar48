@@ -17,6 +17,7 @@ public class StreamsApp {
 
     props.put(StreamsConfig.APPLICATION_ID_CONFIG, Config.get().consumerId);
     props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, Config.get().brokerList);
+    props.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, Config.get().threads);
     props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
     props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 

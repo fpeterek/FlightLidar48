@@ -13,11 +13,12 @@ targetCompatibility = 14
 sourceCompatibility = 14
 
 dependencies {
-    compile 'joda-time:joda-time:2.10.8'
-    compile 'org.json:json:20200518'
-    compile 'org.apache.kafka:kafka-clients:2.6.0'
-    compile 'org.apache.kafka:kafka-streams:2.6.0'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.11.3'
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+    implementation 'joda-time:joda-time:2.10.8'
+    implementation 'org.json:json:20200518'
+    implementation 'org.apache.kafka:kafka-clients:2.6.0'
+    implementation 'org.apache.kafka:kafka-streams:2.6.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.3'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
@@ -39,7 +40,7 @@ tasks.withType(JavaExec) {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'org.fpeterek.flightlidar48.validator.MainKt'
+        attributes 'Main-Class': 'org.fpeterek.flightlidar48.validator.Main'
     }
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }

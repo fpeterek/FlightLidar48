@@ -12,6 +12,8 @@ public class Validator {
 
   private final KafkaMessageValidator messageValidator = new KafkaMessageValidator();
   private final ReceiverValidator receiverValidator = new ReceiverValidator();
+  private final KafkaWriter writer = new KafkaWriter();
+  private final MailClient mailClient = new MailClient();
 
   private boolean validate(KafkaMessage msg) {
     return messageValidator.validate(msg);
@@ -21,8 +23,21 @@ public class Validator {
     return receiverValidator.receiverInputAccepted(recv);
   }
 
-  private void handle(JSONObject json) {
+  private void notify(ReceiverData recv) {
+    if (mailClient.notifyReceiver(recv)) {
+      recv.setNotified();
+    }
+  }
 
+  private void notifyIfNeeded(ReceiverData recv) {
+    if (recv.totalRequests() > Config.get().assessmentThreshold && recv.validPercentage() <= 50 && recv.isNotifiable()) {
+      notify(recv);
+    }
+  }
+
+  private void handle(String str) {
+
+    final var json = new JSONObject(str);
     final var id = json.getInt("receiver");
     final var recv = receivers.get(id);
 
@@ -32,13 +47,15 @@ public class Validator {
       KafkaMessage msg = KafkaMessage.fromJson(json);
       valid = validate(msg);
     } catch (Exception ignored) {
-      /* noop -> valid stays false */
+      System.out.println("JSONException");
+      /* noop -> variable 'valid' stays false */
     }
 
     recv.addRequest(valid);
+    notifyIfNeeded(recv);
 
     if (valid && validate(recv)) {
-      /* TODO: Implement */
+      writer.write(str);
       System.out.println(json);
     }
 
@@ -46,8 +63,7 @@ public class Validator {
 
   public void validate(String key, String value) {
     try {
-      var json = new JSONObject(value);
-      handle(json);
+      handle(value);
     } catch (JSONException ignored) {
 
     }
