@@ -46,17 +46,20 @@ public class Validator {
     try {
       KafkaMessage msg = KafkaMessage.fromJson(json);
       valid = validate(msg);
-    } catch (Exception ignored) {
-      System.out.println("JSONException");
+    } catch (JSONException ignored) {
       /* noop -> variable 'valid' stays false */
+    } catch (Exception e) {
+      e.printStackTrace();
+      /* Variable 'valid' also stays false, however, exception could indicate an error, therefore we should at least */
+      /* log the exception */
     }
+
 
     recv.addRequest(valid);
     notifyIfNeeded(recv);
 
     if (valid && validate(recv)) {
       writer.write(str);
-      System.out.println(json);
     }
 
   }

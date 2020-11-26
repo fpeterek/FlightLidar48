@@ -23,8 +23,7 @@ public class AircraftValidator extends MessageValidator {
 
       if (c == '-') {
         ++dashes;
-      }
-      if (!(Character.isAlphabetic(c) || Character.isDigit(c))) {
+      } else if (!(Character.isAlphabetic(c) || Character.isDigit(c))) {
         alnums = false;
       }
     }

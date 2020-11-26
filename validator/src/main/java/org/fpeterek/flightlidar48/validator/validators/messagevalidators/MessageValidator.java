@@ -13,8 +13,7 @@ public abstract class MessageValidator {
   }
 
   public boolean validate(KafkaMessage msg) {
-    System.out.println(this.getClass().getName());
-    return validateMessage(msg) && (next == null || next.validateMessage(msg));
+    return validateMessage(msg) && (next == null || next.validate(msg));
   }
 
 }

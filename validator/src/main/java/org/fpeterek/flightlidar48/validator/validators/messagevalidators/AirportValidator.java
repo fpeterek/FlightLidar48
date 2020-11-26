@@ -11,7 +11,7 @@ public class AirportValidator extends MessageValidator {
 
     var alphas = true;
 
-    for (int i = 0; i <= airport.length(); ++i) {
+    for (int i = 0; i < airport.length(); ++i) {
       char c = airport.charAt(i);
       if (!(Character.isAlphabetic(c) && Character.isUpperCase(c))) {
         alphas = false;
