@@ -1,4 +1,4 @@
-package org.fpeterek.flightlidar48.records;
+package org.fpeterek.flightlidar48.database.records;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;

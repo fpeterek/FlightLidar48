@@ -1,12 +1,13 @@
-package org.fpeterek.flightlidar48.database;
+package org.fpeterek.flightlidar48.database.gateways;
 
-import org.fpeterek.flightlidar48.records.Airport;
-import org.fpeterek.flightlidar48.records.Flight;
+import org.fpeterek.flightlidar48.database.records.Airport;
+import org.fpeterek.flightlidar48.database.records.Flight;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
 
 public class AirportGateway extends Gateway {
   @Override

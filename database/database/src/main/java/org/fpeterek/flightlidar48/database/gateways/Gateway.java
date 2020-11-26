@@ -1,6 +1,4 @@
-package org.fpeterek.flightlidar48.database;
-
-import org.fpeterek.flightlidar48.records.Airport;
+package org.fpeterek.flightlidar48.database.gateways;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

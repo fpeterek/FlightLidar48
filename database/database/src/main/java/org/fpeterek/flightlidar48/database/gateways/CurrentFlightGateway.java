@@ -1,7 +1,7 @@
-package org.fpeterek.flightlidar48.database;
+package org.fpeterek.flightlidar48.database.gateways;
 
-import org.fpeterek.flightlidar48.records.CurrentFlight;
-import org.fpeterek.flightlidar48.records.Flight;
+import org.fpeterek.flightlidar48.database.records.CurrentFlight;
+import org.fpeterek.flightlidar48.database.records.Flight;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -1,7 +1,7 @@
-package org.fpeterek.flightlidar48.database;
+package org.fpeterek.flightlidar48.database.gateways;
 
-import org.fpeterek.flightlidar48.records.AircraftType;
-import org.fpeterek.flightlidar48.records.Aircraft;
+import org.fpeterek.flightlidar48.database.records.AircraftType;
+import org.fpeterek.flightlidar48.database.records.Aircraft;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

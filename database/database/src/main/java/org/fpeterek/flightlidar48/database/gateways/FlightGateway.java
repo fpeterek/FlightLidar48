@@ -1,8 +1,8 @@
-package org.fpeterek.flightlidar48.database;
+package org.fpeterek.flightlidar48.database.gateways;
 
-import org.fpeterek.flightlidar48.records.Aircraft;
-import org.fpeterek.flightlidar48.records.CurrentFlight;
-import org.fpeterek.flightlidar48.records.Flight;
+import org.fpeterek.flightlidar48.database.records.Aircraft;
+import org.fpeterek.flightlidar48.database.records.CurrentFlight;
+import org.fpeterek.flightlidar48.database.records.Flight;
 import org.joda.time.DateTime;
 
 import java.sql.PreparedStatement;
