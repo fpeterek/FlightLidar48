@@ -50,7 +50,8 @@ object Config {
         }
     }
 
-    val topic = getString("TOPIC", "receiver-input-topic")
+    val locality = getString("LOCALITY", "dev")
+    val topic = "${getString("TOPIC", "receiver-input-topic")}-$locality"
     val brokerList = getString("BROKER_LIST", "127.0.0.1:9092")
     val producerId = getString("PRODUCER_ID", "RandomDataGenerator")
     val receiverId = getInt("RECEIVER_ID", 1)
