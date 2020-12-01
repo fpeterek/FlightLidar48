@@ -87,4 +87,14 @@ public class FlightGateway extends Gateway {
   public List<Flight> get() throws SQLException {
     return (List)getAll();
   }
+
+  public void landFlight(Flight flight) throws SQLException {
+
+    final var query = "UPDATE flight SET arrival=current_timestamp WHERE flight.id = ?;";
+    var stmt = conn.prepareStatement(query);
+    stmt.setLong(1, flight.id());
+    stmt.executeUpdate();
+
+  }
+
 }

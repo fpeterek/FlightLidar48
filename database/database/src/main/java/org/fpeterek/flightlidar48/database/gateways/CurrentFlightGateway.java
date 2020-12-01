@@ -3,9 +3,9 @@ package org.fpeterek.flightlidar48.database.gateways;
 import org.fpeterek.flightlidar48.database.records.CurrentFlight;
 import org.fpeterek.flightlidar48.database.records.Flight;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CurrentFlightGateway extends Gateway {
@@ -43,7 +43,7 @@ public class CurrentFlightGateway extends Gateway {
     }
 
     final var query = baseQuery() + " WHERE flight=?;";
-    PreparedStatement stmt = conn.prepareStatement(query);
+    var stmt = conn.prepareStatement(query);
     stmt.setLong(1, fl.id());
 
     var rs = stmt.executeQuery();
@@ -64,4 +64,34 @@ public class CurrentFlightGateway extends Gateway {
   public List<CurrentFlight> get() throws SQLException {
     return (List)getAll();
   }
+
+  public void removeLanded() throws SQLException {
+    final var query = "DELETE FROM current_flight USING flight WHERE current_flight.flight=flight.id AND flight.arrival IS NOT NULL;";
+    var stmt = conn.prepareStatement(query);
+    stmt.executeUpdate();
+  }
+
+  public List<CurrentFlight> fetchAirborne() throws SQLException {
+
+    final var query = baseQuery() + " JOIN flight ON current_flight.flight=flight.id WHERE flight.arrival IS NULL;";
+    var stmt = conn.prepareStatement(query);
+    var rs = stmt.executeQuery();
+    var list = new ArrayList<CurrentFlight>();
+
+    while (rs.next()) {
+      list.add(extractOne(rs));
+    }
+
+    return list;
+  }
+
+  public void delete(long id) throws SQLException {
+
+    final var query = "DELETE FROM current_flight WHERE id=?;";
+    var stmt = conn.prepareStatement(query);
+    stmt.setLong(1, id);
+    stmt.executeUpdate();
+
+  }
+
 }
