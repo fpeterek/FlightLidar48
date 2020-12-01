@@ -1,6 +1,6 @@
 package org.fpeterek.flightlidar48.validator.validators.messagevalidators;
 
-import org.fpeterek.flightlidar48.validator.KafkaMessage;
+import org.fpeterek.flightlidar48.json.KafkaMessage;
 
 public class FlightValidator extends MessageValidator {
 

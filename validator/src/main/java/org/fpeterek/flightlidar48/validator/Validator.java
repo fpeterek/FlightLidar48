@@ -1,5 +1,6 @@
 package org.fpeterek.flightlidar48.validator;
 
+import org.fpeterek.flightlidar48.json.KafkaMessage;
 import org.fpeterek.flightlidar48.validator.validators.*;
 import org.fpeterek.flightlidar48.validator.validators.messagevalidators.*;
 import org.json.JSONException;
