@@ -100,6 +100,6 @@ ALTER TABLE current_flight ADD CONSTRAINT current_flight_flight_id_pk FOREIGN KE
 ALTER TABLE flight ADD CONSTRAINT flight_origin_pk FOREIGN KEY (origin) REFERENCES airport(icao);
 ALTER TABLE flight ADD CONSTRAINT flight_destination_pk FOREIGN KEY (destination) REFERENCES airport(icao);
 ALTER TABLE flight ADD CONSTRAINT flight_aircraft_pk FOREIGN KEY (aircraft) REFERENCES aircraft(registration);
-ALTER TABLE flight ADD CONSTRAINT flight_current_id_pk FOREIGN KEY (current_flight) REFERENCES current_flight(id);
+ALTER TABLE flight ADD CONSTRAINT flight_current_id_pk FOREIGN KEY (current_flight) REFERENCES current_flight(id) DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE aircraft ADD CONSTRAINT aircraft_airline_pk FOREIGN KEY (airline) REFERENCES airline(designator);

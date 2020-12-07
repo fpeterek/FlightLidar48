@@ -1,16 +1,26 @@
 package org.fpeterek.flightlidar48.writer;
 
-import org.fpeterek.flightlidar48.database.gateways.FlightGateway;
+import org.fpeterek.flightlidar48.database.records.CurrentFlight;
+import org.fpeterek.flightlidar48.database.records.Flight;
 import org.fpeterek.flightlidar48.json.KafkaMessage;
+import org.fpeterek.flightlidar48.writer.data.FlightData;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Writer {
 
-  private FlightGateway flgw = new FlightGateway(Config.get().dbUrl, Config.get().dbUser, Config.get().dbPass);
+  private final DataProxy dataproxy = new DataProxy();
+
+  private final List<FlightData> flights = new ArrayList<>();
 
   public Writer() throws SQLException {
+  }
+
+  private FlightData findFlight(String flight) {
+    return flights.stream().filter(fl -> fl.flight().number().equals(flight)).findFirst().orElse(null);
   }
 
   private void clock() {
@@ -29,7 +39,42 @@ public class Writer {
     /* Meaning this function can't do much as of now                            */
   }
 
+  private void createFlight(KafkaMessage msg) {
+
+    try {
+      var fl = dataproxy.createAndGetFlight(msg.flight(), msg.orig(), msg.dest(), msg.aircraft());
+
+      dataproxy.createCurrent(
+        fl.id(), msg.lat(), msg.lon(), msg.squawk(), msg.altitude(), msg.direction(), msg.speed()
+      );
+      dataproxy.withCurrent(fl);
+
+      var current = fl.currentFlight();
+
+      if (current == null) {
+        throw new RuntimeException("Failed to fetch current flight for flight " + fl.number());
+      }
+
+      flights.add(new FlightData(fl, current));
+
+    } catch (Exception ex) {
+      /* Just log the failure and try again on next message */
+      System.out.println("Failed to create flight '" + msg.flight() + "' with exception " + ex.getClass());
+      System.out.println(ex.getMessage());
+    }
+
+  }
+
   private void handleFlightRecord(KafkaMessage message) {
+
+    var flightData = findFlight(message.flight());
+
+    if (flightData == null) {
+      createFlight(message);
+      return;
+    }
+
+    // TODO: update flight
 
   }
 

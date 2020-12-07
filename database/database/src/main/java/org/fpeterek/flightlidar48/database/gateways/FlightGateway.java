@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FlightGateway extends Gateway {
@@ -93,6 +94,48 @@ public class FlightGateway extends Gateway {
     final var query = "UPDATE flight SET arrival=current_timestamp WHERE flight.id = ?;";
     var stmt = conn.prepareStatement(query);
     stmt.setLong(1, flight.id());
+    stmt.executeUpdate();
+
+  }
+
+  public Flight fetchLatest(String flId) throws SQLException {
+
+    final var query = baseQuery() + " WHERE number = ? AND arrival IS NULL ORDER BY departure DESC LIMIT 1;";
+    var stmt = conn.prepareStatement(query);
+    stmt.setString(1, flId);
+    var rs = stmt.executeQuery();
+
+    if (!rs.next()) {
+      return null;
+    }
+    return extractOne(rs);
+
+  }
+
+  public List<Flight> fetchAirborne() throws SQLException {
+
+    final var query = baseQuery() + " WHERE arrival IS NULL;";
+    var stmt = conn.prepareStatement(query);
+    var rs = stmt.executeQuery();
+    var list = new ArrayList<Flight>();
+
+    while (rs.next()) {
+      list.add(extractOne(rs));
+    }
+
+    return list;
+  }
+
+  public void createFlight(String number, String orig, String dest, String aircraft) throws SQLException {
+
+    final var query = "INSERT INTO flight (number, departure, origin, destination, aircraft) " +
+      "VALUES(?, current_timestamp, ?, ?, ?);";
+    var stmt = conn.prepareStatement(query);
+
+    stmt.setString(1, number);
+    stmt.setString(2, orig);
+    stmt.setString(3, dest);
+    stmt.setString(4, aircraft);
     stmt.executeUpdate();
 
   }

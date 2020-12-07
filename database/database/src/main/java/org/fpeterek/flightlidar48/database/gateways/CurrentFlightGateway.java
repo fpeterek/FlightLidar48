@@ -94,4 +94,20 @@ public class CurrentFlightGateway extends Gateway {
 
   }
 
+  public void create(long flId, double lat, double lon, int squawk, int alt, double dir, int speed) throws SQLException {
+
+    final var query = "INSERT INTO current_flight (flight, lat, lon, squawk, altitude, direction, groundspeed) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?);";
+    var stmt = conn.prepareStatement(query);
+
+    stmt.setLong(1, flId);
+    stmt.setDouble(2, lat);
+    stmt.setDouble(3, lon);
+    stmt.setInt(4, squawk);
+    stmt.setInt(5, alt);
+    stmt.setDouble(6, dir);
+    stmt.setInt(7, speed);
+
+    stmt.executeUpdate();
+  }
 }
