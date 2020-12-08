@@ -32,4 +32,8 @@ public class FlightData {
     lastModified = System.currentTimeMillis();
   }
 
+  public long timestamp() {
+    return lastModified;
+  }
+
 }

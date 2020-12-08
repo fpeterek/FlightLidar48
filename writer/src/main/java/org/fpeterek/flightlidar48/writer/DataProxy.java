@@ -4,9 +4,12 @@ import org.fpeterek.flightlidar48.database.gateways.CurrentFlightGateway;
 import org.fpeterek.flightlidar48.database.gateways.FlightGateway;
 import org.fpeterek.flightlidar48.database.records.CurrentFlight;
 import org.fpeterek.flightlidar48.database.records.Flight;
+import org.fpeterek.flightlidar48.writer.data.FlightData;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataProxy {
 
@@ -23,8 +26,14 @@ public class DataProxy {
     current = new CurrentFlightGateway(Config.get().dbUrl, Config.get().dbUser, Config.get().dbPass);
   }
 
-  public List<Flight> fetchFlights() throws SQLException {
-    return flights.fetchAirborne();
+  public Map<String, FlightData> fetchFlights() throws SQLException {
+
+    var fl = flights.fetchAirborne();
+    var map = new HashMap<String, FlightData>();
+
+    fl.forEach(it -> map.put(it.number(), new FlightData(it, null)));
+
+    return map;
   }
 
   public Flight fetchLatest(String flight) throws SQLException {
@@ -33,7 +42,7 @@ public class DataProxy {
 
   public Flight createAndGetFlight(String number, String orig, String dest, String aircraft) throws SQLException {
     flights.createFlight(number, orig, dest, aircraft);
-    return flights.fetchLatest(number);
+    return fetchLatest(number);
   }
 
   public void createCurrent(long id, double lat, double lon, int squawk, int altitude, double direction, int speed) throws SQLException {
@@ -42,6 +51,14 @@ public class DataProxy {
 
   public Flight withCurrent(Flight fl) throws SQLException {
     return current.withFlight(fl);
+  }
+
+  public void updateCurrent(CurrentFlight cf) throws SQLException {
+    current.update(cf);
+  }
+
+  public void landFlights(List<Flight> toLand) throws SQLException {
+    flights.landFlights(toLand);
   }
 
 }
