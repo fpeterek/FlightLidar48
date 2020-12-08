@@ -98,6 +98,20 @@ public class FlightGateway extends Gateway {
 
   }
 
+  public void landFlights(List<Flight> flights) throws SQLException {
+
+    final var query = "UPDATE flight SET arrival=current_timestamp WHERE flight.id = ?;";
+    var stmt = conn.prepareStatement(query);
+
+    for (Flight fl : flights) {
+      stmt.setLong(1, fl.id());
+      stmt.addBatch();
+    }
+
+    stmt.executeBatch();
+
+  }
+
   public Flight fetchLatest(String flId) throws SQLException {
 
     final var query = baseQuery() + " WHERE number = ? AND arrival IS NULL ORDER BY departure DESC LIMIT 1;";

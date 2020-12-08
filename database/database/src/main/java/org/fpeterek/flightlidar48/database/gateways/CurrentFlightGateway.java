@@ -110,4 +110,20 @@ public class CurrentFlightGateway extends Gateway {
 
     stmt.executeUpdate();
   }
+
+  public void update(CurrentFlight cf) throws SQLException {
+    final var query = "UPDATE current_flight SET lat=?, lon=?, squawk=?, altitude=?, direction=?, groundspeed=? WHERE id=?;";
+    var stmt = conn.prepareStatement(query);
+
+    stmt.setDouble(1, cf.lat());
+    stmt.setDouble(2, cf.lon());
+    stmt.setInt(3, cf.squawk());
+    stmt.setInt(4, cf.altitude());
+    stmt.setDouble(5, cf.direction());
+    stmt.setInt(6, cf.groundspeed());
+    stmt.setLong(7, cf.id());
+
+    stmt.executeUpdate();
+  }
+
 }
