@@ -28,6 +28,10 @@ public abstract class Gateway {
     return res;
   }
 
+  public Gateway(Connection connection) {
+    conn = connection;
+  }
+
   public Gateway() throws SQLException {
     conn = DriverManager.getConnection(
       "jdbc:postgresql://localhost:5432/flightlidar",

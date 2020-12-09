@@ -3,6 +3,7 @@ package org.fpeterek.flightlidar48.database.gateways;
 import org.fpeterek.flightlidar48.database.records.Aircraft;
 import org.fpeterek.flightlidar48.database.records.CurrentFlight;
 import org.fpeterek.flightlidar48.database.records.Flight;
+import org.fpeterek.flightlidar48.util.GeoPoint;
 import org.joda.time.DateTime;
 
 import java.sql.PreparedStatement;
@@ -15,7 +16,7 @@ public class FlightGateway extends Gateway {
 
   @Override
   protected final String baseQuery() {
-    return "SELECT id, number, departure, arrival, origin, destination, aircraft, current_flight FROM flight";
+    return "SELECT flight.id, number, departure, arrival, origin, destination, aircraft, current_flight FROM flight";
   }
 
   public FlightGateway() throws SQLException {
@@ -152,6 +153,27 @@ public class FlightGateway extends Gateway {
     stmt.setString(4, aircraft);
     stmt.executeUpdate();
 
+  }
+
+  public List<Flight> fetchFlights(GeoPoint low, GeoPoint high) throws SQLException {
+    final var query = baseQuery() +
+      " JOIN current_flight cf ON cf.flight=flight.id WHERE ? < cf.lat AND cf.lat < ? AND ? < cf.lon AND cf.lon < ?;";
+
+    var stmt = conn.prepareStatement(query);
+
+    stmt.setDouble(1, low.lat());
+    stmt.setDouble(2, high.lat());
+    stmt.setDouble(3, low.lon());
+    stmt.setDouble(4, high.lon());
+
+    var rs = stmt.executeQuery();
+    var result = new ArrayList<Flight>();
+
+    while (rs.next()) {
+      result.add(extractOne(rs));
+    }
+
+    return result;
   }
 
 }
