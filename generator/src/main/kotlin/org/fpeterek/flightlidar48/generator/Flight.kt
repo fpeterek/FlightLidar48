@@ -1,9 +1,12 @@
 package org.fpeterek.flightlidar48.generator
 
 import org.json.JSONObject
+import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
+import kotlin.math.sin
 import kotlin.random.Random
+
 
 data class Flight(
     val number: String,
@@ -56,13 +59,14 @@ data class Flight(
 
     private fun move(dt: Double) {
         val kmh = speed.kmh
-        val dx = kmh * dt
-        val dy = kmh * dt
+        val dir = Math.toRadians(direction)
+        val dx = kmh * dt * cos(dir)
+        val dy = kmh * dt * sin(dir)
 
         val dlat = dy / 6_378_000 * 180 * Math.PI
         val newLat = lat + dlat
 
-        val dlon = (dx / 6_378_000 * 180 * Math.PI) / Math.cos(Math.toRadians(newLat))
+        val dlon = (dx / 6_378_000 * 180 * Math.PI) / cos(Math.toRadians(newLat))
         val newLon = lon + dlon
 
         lat = adjustLat(newLat)

@@ -66,8 +66,8 @@ object Generator {
     }
 
     private fun update(dt: Double) = flights.forEach {
-            it.update(dt)
-        }
+        it.update(dt)
+    }
 
     private fun output() = flights.forEach {
         if (Config.writeToStdout) {
