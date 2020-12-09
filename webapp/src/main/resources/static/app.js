@@ -34,4 +34,3 @@ class SearchForm extends React.Component {
 const dom = document.querySelector('#flight_search')
 ReactDOM.render(React.createElement(SearchForm), dom)
 
-

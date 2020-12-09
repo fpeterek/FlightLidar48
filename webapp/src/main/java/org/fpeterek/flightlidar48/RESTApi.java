@@ -1,0 +1,68 @@
+package org.fpeterek.flightlidar48;
+
+import org.fpeterek.flightlidar48.database.records.Flight;
+import org.fpeterek.flightlidar48.util.GeoPoint;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import ratpack.server.BaseDir;
+import ratpack.server.RatpackServer;
+import ratpack.util.MultiValueMap;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
+
+class RESTApi {
+
+  private final RatpackServer server;
+  private final FlightLidar48 fl48 = new FlightLidar48();
+
+  public RESTApi() throws Exception {
+    server = RatpackServer.start(server ->
+      server
+        .serverConfig(builder ->
+          builder.baseDir(BaseDir.find()).publicAddress(new URI("http://flightlidar48.org"))
+        )
+        .registryOf(registry ->
+          registry.add("World!")
+        )
+        .handlers(chain ->
+          chain
+            .files(
+              f -> f.dir("static").indexFiles("index.html")
+            )
+            .prefix("get", getChain -> getChain.get(
+                handler -> {
+                  handler.getResponse().getHeaders()
+                    .set("Access-Control-Allow-Origin", "127.0.0.1, localhost")
+                    .set("Access-Control-Allow-Methods", "GET, POST, PUT");
+                  var data = getAircraft(handler.getRequest().getQueryParams());
+                  handler.render(data);
+                })
+            )
+        )
+    );
+  }
+
+  private String getAircraft(MultiValueMap<String, String> params) {
+
+    final var lb = new GeoPoint(Double.parseDouble(params.get("lby")), Double.parseDouble(params.get("lbx")));
+    final var rt = new GeoPoint(Double.parseDouble(params.get("rty")), Double.parseDouble(params.get("rtx")));
+
+    List<Flight> aircraft;
+    try {
+      aircraft = fl48.getFlights(lb, rt);
+    } catch (Exception e) {
+      System.out.println("Failed to fetch flights with exception " + e.getClass());
+      System.out.println(e.getMessage());
+      e.printStackTrace();
+      aircraft = new ArrayList<>();
+    }
+
+    var res = JsonFormatter.mapRecords(aircraft);
+
+    return res;
+  }
+
+}
