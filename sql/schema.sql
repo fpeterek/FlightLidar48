@@ -50,7 +50,7 @@ CREATE TABLE flight (
     origin CHAR(4) NOT NULL,
     destination CHAR(4) NOT NULL,
     aircraft CHAR(6) NOT NULL,
-    current_flight INTEGER NOT NULL
+    current_flight INTEGER
 );
 
 ALTER TABLE flight ADD CONSTRAINT flight_pk PRIMARY KEY (id);
