@@ -59,6 +59,7 @@ public class DataProxy {
 
   public void landFlights(List<Flight> toLand) throws SQLException {
     flights.landFlights(toLand);
+    current.removeLanded();
   }
 
 }
