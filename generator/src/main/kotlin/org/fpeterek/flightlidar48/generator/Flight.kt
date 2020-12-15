@@ -24,6 +24,9 @@ data class Flight(
     private val Int.kmh
         get() = this * 1.852
 
+    private val Int.mps
+        get() = this.kmh / 3.6
+
     private enum class Bank(val value: Int) {
         Left(-1),
         Right(1),
@@ -58,7 +61,7 @@ data class Flight(
     }
 
     private fun move(dt: Double) {
-        val kmh = speed.kmh
+        val kmh = speed.mps
         val dir = Math.toRadians(direction)
         val dx = kmh * dt * cos(dir)
         val dy = kmh * dt * sin(dir)
