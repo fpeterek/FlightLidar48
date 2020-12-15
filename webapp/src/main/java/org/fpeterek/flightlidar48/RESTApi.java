@@ -2,14 +2,11 @@ package org.fpeterek.flightlidar48;
 
 import org.fpeterek.flightlidar48.database.records.Flight;
 import org.fpeterek.flightlidar48.util.GeoPoint;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import ratpack.server.BaseDir;
 import ratpack.server.RatpackServer;
 import ratpack.util.MultiValueMap;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -45,24 +42,34 @@ class RESTApi {
     );
   }
 
-  private String getAircraft(MultiValueMap<String, String> params) {
 
-    final var lb = new GeoPoint(Double.parseDouble(params.get("lby")), Double.parseDouble(params.get("lbx")));
-    final var rt = new GeoPoint(Double.parseDouble(params.get("rty")), Double.parseDouble(params.get("rtx")));
+  private String getAircraft(GeoPoint lb, GeoPoint rt, int retries) {
 
     List<Flight> aircraft;
     try {
       aircraft = fl48.getFlights(lb, rt);
     } catch (Exception e) {
+
       System.out.println("Failed to fetch flights with exception " + e.getClass());
       System.out.println(e.getMessage());
       e.printStackTrace();
-      aircraft = new ArrayList<>();
+
+      if (retries > 0) {
+        return getAircraft(lb, rt, retries-1);
+      }
+      System.out.println("Failed to fetch flight even after retry.");
+      return JsonFormatter.error("Could not fetch aircraft from database.");
     }
 
-    var res = JsonFormatter.mapRecords(aircraft);
+    return JsonFormatter.mapRecords(aircraft);
+  }
 
-    return res;
+  private String getAircraft(MultiValueMap<String, String> params) {
+
+    final var lb = new GeoPoint(Double.parseDouble(params.get("lby")), Double.parseDouble(params.get("lbx")));
+    final var rt = new GeoPoint(Double.parseDouble(params.get("rty")), Double.parseDouble(params.get("rtx")));
+    return getAircraft(lb, rt, 1);
+
   }
 
 }

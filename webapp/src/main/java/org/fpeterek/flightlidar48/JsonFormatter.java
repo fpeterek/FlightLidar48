@@ -23,12 +23,24 @@ public class JsonFormatter {
       .put("speed", flight.currentFlight().groundspeed());
   }
 
+  private static JSONObject success() {
+    return new JSONObject().put("status", "success");
+  }
+
+  private static JSONObject failure() {
+    return new JSONObject().put("status", "failure");
+  }
+
   public static String mapRecords(List<Flight> flights) {
     var arr = new JSONArray();
     flights.stream()
       .filter(fl -> fl.currentFlight() != null)
       .forEach(fl -> arr.put(mapRecord(fl)));
-    return arr.toString();
+    return success().put("results", arr).toString();
+  }
+
+  public static String error(String reason) {
+    return failure().put("reason", reason).toString();
   }
 
 }
