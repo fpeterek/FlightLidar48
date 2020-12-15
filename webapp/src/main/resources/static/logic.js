@@ -138,6 +138,11 @@ function update() {
         estimate(1.0)
         render()
     }
+    xhr.onerror = function(e) {
+        console.log('Failed to make call to server')
+        estimate(1.0)
+        render()
+    }
     xhr.send()
 }
 
@@ -150,6 +155,9 @@ function initMap() {
     markerLayer = new SMap.Layer.Marker()
     map.addLayer(markerLayer)
     markerLayer.enable()
+
+    let sync = new SMap.Control.Sync({bottomSpace:40})
+    map.addControl(sync)
 
     setInterval(update, 1000)
 }
