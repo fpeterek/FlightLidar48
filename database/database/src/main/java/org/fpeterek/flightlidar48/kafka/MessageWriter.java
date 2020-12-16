@@ -24,15 +24,16 @@ public class MessageWriter {
 
   private final KafkaProducer<String, String> producer;
 
-  private final ProducerRecord<String, String> healthcheckRecord = createRecord(
-    new JSONObject().put("healthcheck", "healthcheck").toString()
-  );
+  private final ProducerRecord<String, String> healthcheckRecord;
 
   public MessageWriter(String brokers, String producerID, String outTopic) {
     if (brokers == null || producerID == null || outTopic == null) {
       throw new IllegalArgumentException("Value might not be null (use Kotlin)");
     }
     topic = outTopic;
+    healthcheckRecord = createRecord(
+      new JSONObject().put("healthcheck", "healthcheck").toString()
+    );
     producer = new KafkaProducer<>(initProps(brokers, producerID));
   }
 
