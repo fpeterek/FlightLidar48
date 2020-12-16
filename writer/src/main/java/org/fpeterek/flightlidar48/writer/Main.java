@@ -1,10 +1,13 @@
 package org.fpeterek.flightlidar48.writer;
 
+import org.fpeterek.flightlidar48.kafka.MessageHandler;
+import org.fpeterek.flightlidar48.kafka.MessageStream;
+
 import java.sql.SQLException;
 
 public class Main {
 
-  private static void runStreams(StreamsApp streams, Healthcheck healthcheck) {
+  private static void runStreams(MessageStream streams, Healthcheck healthcheck) {
     try {
 
       healthcheck.run();
@@ -19,11 +22,23 @@ public class Main {
     }
   }
 
+  private static MessageStream createStream(MessageHandler handler) {
+
+    return MessageStream.builder()
+      .setBrokerList(Config.get().brokerList)
+      .setConsumerID(Config.get().consumerId)
+      .setInputTopic(Config.get().inputTopic)
+      .setThreadCount(Config.get().threads)
+      .setHandler(handler)
+      .build();
+
+  }
+
   public static void run() {
     try {
 
       var writer = new Writer();
-      var streams = new StreamsApp(writer);
+      var streams = createStream(writer);
       var healthcheck = new Healthcheck();
       runStreams(streams, healthcheck);
 

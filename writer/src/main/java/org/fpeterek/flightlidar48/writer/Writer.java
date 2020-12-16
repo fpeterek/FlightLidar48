@@ -3,13 +3,14 @@ package org.fpeterek.flightlidar48.writer;
 import org.fpeterek.flightlidar48.database.records.CurrentFlight;
 import org.fpeterek.flightlidar48.database.records.Flight;
 import org.fpeterek.flightlidar48.json.KafkaMessage;
+import org.fpeterek.flightlidar48.kafka.MessageHandler;
 import org.fpeterek.flightlidar48.writer.data.BookKeeper;
 import org.fpeterek.flightlidar48.writer.data.FlightData;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
 
-public class Writer {
+public class Writer implements MessageHandler {
 
   private final DataProxy dataproxy = new DataProxy();
   private final BookKeeper bookkeeper = new BookKeeper(dataproxy.fetchFlights());
@@ -125,6 +126,7 @@ public class Writer {
 
   }
 
+  @Override
   public void handleMessage(String key, String value) {
 
     try {
