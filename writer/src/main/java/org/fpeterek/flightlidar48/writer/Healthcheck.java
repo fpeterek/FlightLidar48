@@ -13,7 +13,7 @@ public class Healthcheck {
 
   private Thread thread;
   private final AtomicBoolean isRunning = new AtomicBoolean(false);
-  private final long intervalMS = 60 * 1_000; // 60 seconds
+  private final long intervalMS = Config.get().healthcheckThreshold;
 
   private final String topic = Config.get().inputTopic;
 

@@ -78,9 +78,10 @@ public class Config {
   public final String dbPass;
 
   public final int deletionThresholdMs;
+  public final int healthcheckThreshold;
 
   private Config(String input, String brokers, String consId, String loc, int streamsThreads, String db,
-                 String user, String passwd, int deletionThreshold) {
+                 String user, String passwd, int deletionThreshold, int hcThreshold) {
     inputTopic = input;
     brokerList = brokers;
     consumerId = consId;
@@ -90,6 +91,7 @@ public class Config {
     dbUser = user;
     dbPass = passwd;
     deletionThresholdMs = deletionThreshold;
+    healthcheckThreshold = hcThreshold;
   }
 
   private Config() {
@@ -102,7 +104,8 @@ public class Config {
       getString("DB_URL", "jdbc:postgresql://localhost:5432/flightlidar"),
       getString("DB_USER", "fpeterek"),
       getString("DB_PASSWORD", ""),
-      getInt("DELETION_THRESHOLD_MS", 10000)
+      getInt("DELETION_THRESHOLD_MS", 10000),
+      getInt("HEALTHCHECK_PERIOD_MS", 10000)
     );
   }
 
