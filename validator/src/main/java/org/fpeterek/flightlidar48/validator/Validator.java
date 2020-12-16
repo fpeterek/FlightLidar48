@@ -1,19 +1,23 @@
 package org.fpeterek.flightlidar48.validator;
 
 import org.fpeterek.flightlidar48.json.KafkaMessage;
+import org.fpeterek.flightlidar48.kafka.MessageHandler;
+import org.fpeterek.flightlidar48.kafka.MessageWriter;
 import org.fpeterek.flightlidar48.validator.validators.*;
 import org.fpeterek.flightlidar48.validator.validators.messagevalidators.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class Validator {
+public class Validator implements MessageHandler {
 
   ReceiverDatabase receivers = new ReceiverDatabase();
 
   private final KafkaMessageValidator messageValidator = new KafkaMessageValidator();
   private final ReceiverValidator receiverValidator = new ReceiverValidator();
-  private final KafkaWriter writer = new KafkaWriter();
+  private final MessageWriter writer = new MessageWriter(
+    Config.get().brokerList, Config.get().producerId, Config.get().outputTopic
+  );
   private final MailClient mailClient = new MailClient();
 
   private boolean validate(KafkaMessage msg) {
@@ -65,7 +69,8 @@ public class Validator {
 
   }
 
-  public void validate(String key, String value) {
+  @Override
+  public void handleMessage(String key, String value) {
     try {
       handle(value);
     } catch (JSONException ignored) {
