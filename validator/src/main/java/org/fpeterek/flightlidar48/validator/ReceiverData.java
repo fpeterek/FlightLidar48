@@ -8,9 +8,72 @@ public class ReceiverData {
 
   final int id;
 
-  private long firstTs = 0;
-  private long validReq = 0;
-  private long totalReq = 0;
+
+  private static class DataTracker {
+
+    private final long dataSizeThreshold = 1 * 1000 * 1000;
+    private final long halfThreshold = dataSizeThreshold / 2;
+
+    private static class Data {
+      public long firstTs = 0;
+      public long validReq = 0;
+      public long totalReq = 0;
+    }
+
+    private Data current = new Data();
+    private Data next = null;
+
+    private long firstTs() {
+      return current.firstTs;
+    }
+
+    private long validReq() {
+      return current.validReq;
+    }
+
+    private long totalReq() {
+      return current.totalReq;
+    }
+
+    private void updateDataHolders() {
+      if (next == null && current.totalReq >= halfThreshold) {
+        next = new Data();
+      }
+      // Theoretically the second condition should only ever be true if the first one is true as well
+      // However, I choose to include it as a safety measure, in case there's some weird bug in the code
+      if (current.totalReq >= dataSizeThreshold || ((next != null) && next.totalReq >= halfThreshold)) {
+        current = next;
+        next = new Data();
+      }
+    }
+
+    private void updateTs() {
+      if (firstTs() == 0) {
+        long ts = System.currentTimeMillis();
+        current.firstTs = ts;
+        if (next != null) {
+          next.firstTs = ts;
+        }
+      }
+    }
+
+    private void updateReqCount(boolean valid) {
+      if (valid) {
+        ++current.validReq;
+      }
+      ++current.totalReq;
+      if (next != null) {
+        if (valid) {
+          ++next.validReq;
+        }
+        ++next.totalReq;
+      }
+    }
+
+  }
+
+  private final DataTracker tracker = new DataTracker();
+
   private boolean notifiable = true;
 
   private final Lock lock = new ReentrantLock();
@@ -29,22 +92,9 @@ public class ReceiverData {
   }
 
   private void addRequestLocked(boolean valid) {
-    updateTs();
-    updateReqCount(valid);
+    tracker.updateTs();
+    tracker.updateReqCount(valid);
     updateNotifiable();
-  }
-
-  private void updateTs() {
-    if (firstTs != 0) {
-      firstTs = System.currentTimeMillis();
-    }
-  }
-
-  private void updateReqCount(boolean valid) {
-    if (valid) {
-      ++validReq;
-    }
-    ++totalReq;
   }
 
   private void updateNotifiable() {
@@ -72,7 +122,7 @@ public class ReceiverData {
   }
 
   private long calcInvalidRequests() {
-    return totalReq - validReq;
+    return tracker.totalReq() - tracker.validReq();
   }
 
   public long invalidRequests() {
@@ -87,7 +137,7 @@ public class ReceiverData {
   public long validRequests() {
     try {
       lock.lock();
-      return validReq;
+      return tracker.validReq();
     } finally {
       lock.unlock();
     }
@@ -96,17 +146,17 @@ public class ReceiverData {
   public long totalRequests() {
     try {
       lock.lock();
-      return totalReq;
+      return tracker.totalReq();
     } finally {
       lock.unlock();
     }
   }
 
   private double calcValidRatio() {
-    if (totalReq <= 0) {
+    if (tracker.totalReq() <= 0) {
       return 0;
     }
-    return (double) validReq / (double) totalReq;
+    return (double)tracker.validReq() / (double)tracker.totalReq();
   }
 
   public double validRatio() {
@@ -158,10 +208,10 @@ public class ReceiverData {
   }
 
   private long calcAvgReqTime() {
-    if (totalReq == 0) {
+    if (tracker.totalReq() == 0) {
       return 1000;
     }
-    return (System.currentTimeMillis() - firstTs) / totalReq;
+    return (System.currentTimeMillis() - tracker.firstTs()) / tracker.totalReq();
   }
 
   public long avgReqTime() {
