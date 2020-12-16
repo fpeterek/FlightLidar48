@@ -47,9 +47,11 @@ class RESTApi {
 
     List<Flight> aircraft;
     try {
+      Metrics.dbCalls.inc();
       aircraft = fl48.getFlights(lb, rt);
     } catch (Exception e) {
 
+      Metrics.failedCalls.inc();
       System.out.println("Failed to fetch flights with exception " + e.getClass());
       System.out.println(e.getMessage());
       e.printStackTrace();

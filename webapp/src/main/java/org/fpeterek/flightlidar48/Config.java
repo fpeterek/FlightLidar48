@@ -71,18 +71,21 @@ public class Config {
   public final String dbUrl;
   public final String dbUser;
   public final String dbPass;
+  public final int metricsPort;
 
-  private Config(String db, String user, String passwd) {
+  private Config(String db, String user, String passwd, int prometheusPort) {
     dbUrl = db;
     dbUser = user;
     dbPass = passwd;
+    metricsPort = prometheusPort;
   }
 
   private Config() {
     this(
       getString("DB_URL", "jdbc:postgresql://localhost:5432/flightlidar"),
       getString("DB_USER", "fpeterek"),
-      getString("DB_PASSWORD", "")
+      getString("DB_PASSWORD", ""),
+      getInt("METRICS_PORT", 7779)
     );
   }
 

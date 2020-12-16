@@ -23,6 +23,8 @@ dependencies {
     implementation 'joda-time:joda-time:2.10.8'
     implementation 'org.postgresql:postgresql:42.2.12'
     implementation 'org.json:json:20200518'
+    implementation 'io.prometheus:simpleclient:0.6.0'
+    implementation 'io.prometheus:simpleclient_httpserver:0.6.0'
     implementation 'org.fpeterek.flightlidar48.database:database:1.0'
     // compile 'org.slf4j:slf4j-simple:1.7.30'
 }
