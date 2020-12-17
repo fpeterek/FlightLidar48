@@ -1,5 +1,6 @@
 let map;
 let markerLayer;
+let selected = null
 let aircraft = [];
 
 function adjustLat(lat) {
@@ -88,8 +89,17 @@ function render() {
 
 function toAircraftList(results) {
     let lst = []
-    for (let ac of results) {
-        lst.push(new Aircraft(ac))
+    let selectedUpdate = false
+    for (let res of results) {
+        let ac = new Aircraft(res)
+        lst.push(ac)
+        if (selected != null && ac.aircraft === selected.aircraft) {
+            selected = ac
+            selectedUpdate = true
+        }
+    }
+    if (!selectedUpdate) {
+        selected = false
     }
     return lst
 }
@@ -98,10 +108,11 @@ function handleResponse(xhr) {
     if (xhr.status !== 200) {
         estimate(1.0)
         console.log("Server responded with " + xhr.status)
+        return
     }
     let resp = xhr.responseText
 
-    parsed = JSON.parse(resp)
+    let parsed = JSON.parse(resp)
 
     if (parsed.status === 'failure') {
         console.log(parsed.reason)
@@ -125,6 +136,45 @@ function createRequest() {
     xhr.open("GET", getEncodedUrl("http://127.0.0.1:5050/get"), true)
     xhr.timeout = 500
     return xhr
+}
+
+function createSearchRequest(term) {
+    let xhr = new XMLHttpRequest()
+    xhr.open("GET", "http://127.0.0.1:5050/search?term=" + encodeURIComponent(term), true)
+    xhr.timeout = 500
+    return xhr
+}
+
+function handleSearchResponse(xhr) {
+    if (xhr.status !== 200) {
+        console.log("Server responded with " + xhr.status)
+        return
+    }
+    let resp = xhr.responseText
+
+    let parsed = JSON.parse(resp)
+
+    if (parsed.status === 'failure') {
+        console.log(parsed.reason)
+        return
+    }
+
+    selected = new Aircraft(parsed.result)
+    map.setCenter(SMap.Coords.fromWGS84(selected.lat, selected.lon))
+}
+
+function performSearch() {
+    let term = document.getElementById("sbox").innerText
+    let xhr = createSearchRequest(term)
+    xhr.onload = function() {
+        handleSearchResponse(xhr)
+    }
+    xhr.ontimeout = function(e) {
+        console.log('Not found')
+    }
+    xhr.onerror = function(e) {
+        console.log('Not found')
+    }
 }
 
 function update() {

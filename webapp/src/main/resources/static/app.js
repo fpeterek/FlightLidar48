@@ -1,7 +1,7 @@
 // const dom = document.querySelector('#flight_search')
 // ReactDOM.render(
 
-class SearchForm extends React.Component {
+/* class SearchForm extends React.Component {
 
     constructor(props) {
         super(props)
@@ -22,7 +22,7 @@ class SearchForm extends React.Component {
 
         return (
             <form onSubmit={this.handleSubmit}>
-                <input type="text" placeholder="Search Flights" value={this.state.value} onChange={this.handleChange} /> 
+                <input type="text" id="searchbox" placeholder="Search Flights" value={this.state.value} onChange={this.handleChange} />
                 <input type="submit" value="Submit" />
             </form>
         )
@@ -33,4 +33,4 @@ class SearchForm extends React.Component {
 
 const dom = document.querySelector('#flight_search')
 ReactDOM.render(React.createElement(SearchForm), dom)
-
+*/

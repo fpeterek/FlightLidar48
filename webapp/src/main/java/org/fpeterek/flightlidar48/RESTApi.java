@@ -2,6 +2,8 @@ package org.fpeterek.flightlidar48;
 
 import org.fpeterek.flightlidar48.database.records.Flight;
 import org.fpeterek.flightlidar48.util.GeoPoint;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import ratpack.server.BaseDir;
 import ratpack.server.RatpackServer;
 import ratpack.util.MultiValueMap;
@@ -30,18 +32,39 @@ class RESTApi {
               f -> f.dir("static").indexFiles("index.html")
             )
             .prefix("get", getChain -> getChain.get(
-                handler -> {
-                  handler.getResponse().getHeaders()
-                    .set("Access-Control-Allow-Origin", "127.0.0.1, localhost")
-                    .set("Access-Control-Allow-Methods", "GET, POST, PUT");
-                  var data = getAircraft(handler.getRequest().getQueryParams());
-                  handler.render(data);
-                })
+              handler -> {
+                handler.getResponse().getHeaders()
+                  .set("Access-Control-Allow-Origin", "127.0.0.1, localhost")
+                  .set("Access-Control-Allow-Methods", "GET, POST, PUT");
+                var data = getAircraft(handler.getRequest().getQueryParams());
+                handler.render(data);
+              })
+            )
+            .prefix("suggest", getChain -> getChain.get(
+              handler -> {
+                handler.getResponse().getHeaders()
+                  .set("Access-Control-Allow-Origin", "127.0.0.1, localhost")
+                  .set("Access-Control-Allow-Methods", "GET, POST, PUT");
+                var data = suggest(handler.getRequest().getQueryParams());
+                handler.render(data);
+              })
             )
         )
     );
   }
 
+  
+
+  private String suggest(MultiValueMap<String, String> params) {
+    System.out.println("Search parameters: term=" + params.get("term"));
+    return new JSONArray()
+      .put("OK-KUA")
+      .put("A6-EDO")
+      .put("OK-YBA")
+      .put("D-EBIL")
+      .put("D-ANKE")
+      .toString();
+  }
 
   private String getAircraft(GeoPoint lb, GeoPoint rt, int retries) {
 
