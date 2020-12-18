@@ -33,10 +33,27 @@ public class AircraftGateway extends Gateway {
     final var registration  = rs.getString("registration");
     final var msn  = rs.getInt("msn");
     final var airline  = rs.getString("airline");
-    final var type  = rs.getString("type");
+    final var type  = rs.getString("type_designator");
     final var firstFlight  = new LocalDate(rs.getDate("first_flight"));
 
     return new Aircraft(registration, msn, airline, null, type, null, firstFlight, new ArrayList<>());
+  }
+
+  public List<Aircraft> searchByPrefix(String prefix, int limit) throws SQLException {
+
+    final var query = baseQuery() + " WHERE registration like ? || '%' LIMIT ?;";
+    PreparedStatement stmt = conn.prepareStatement(query);
+    stmt.setString(1, prefix);
+    stmt.setInt(2, limit);
+
+    final var result = new ArrayList<Aircraft>();
+    var rs = stmt.executeQuery();
+
+    while (rs.next()) {
+      result.add(extractOne(rs));
+    }
+
+    return result;
   }
 
   public List<AircraftType> get() throws SQLException {
@@ -46,7 +63,7 @@ public class AircraftGateway extends Gateway {
 
   public Flight withAircraft(Flight fl) throws SQLException {
 
-    final var query = baseQuery() + " WHERE registration=%;";
+    final var query = baseQuery() + " WHERE registration=?;";
     PreparedStatement stmt = conn.prepareStatement(query);
     stmt.setString(1, fl.aircraftRegistration());
 

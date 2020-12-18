@@ -6,6 +6,7 @@ import org.fpeterek.flightlidar48.database.records.Flight;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -60,4 +61,22 @@ public class AirportGateway extends Gateway {
       flights.set(i, withAirports(flights.get(i)));
     }
   }
+
+  public List<Airport> searchByPrefix(String prefix, int limit) throws SQLException {
+
+    final var query = baseQuery() + " WHERE icao like ? || '%' LIMIT ?;";
+    PreparedStatement stmt = conn.prepareStatement(query);
+    stmt.setString(1, prefix);
+    stmt.setInt(2, limit);
+
+    final var result = new ArrayList<Airport>();
+    var rs = stmt.executeQuery();
+
+    while (rs.next()) {
+      result.add(extractOne(rs));
+    }
+
+    return result;
+  }
+
 }

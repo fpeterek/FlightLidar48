@@ -176,4 +176,22 @@ public class FlightGateway extends Gateway {
     return result;
   }
 
+
+  public List<Flight> searchByPrefix(String prefix, int limit) throws SQLException {
+
+    final var query = baseQuery() + " WHERE number like ? || '%' LIMIT ?;";
+    PreparedStatement stmt = conn.prepareStatement(query);
+    stmt.setString(1, prefix);
+    stmt.setInt(2, limit);
+
+    final var result = new ArrayList<Flight>();
+    var rs = stmt.executeQuery();
+
+    while (rs.next()) {
+      result.add(extractOne(rs));
+    }
+
+    return result;
+  }
+
 }
