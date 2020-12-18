@@ -53,17 +53,14 @@ class RESTApi {
     );
   }
 
-  
-
   private String suggest(MultiValueMap<String, String> params) {
-    System.out.println("Search parameters: term=" + params.get("term"));
-    return new JSONArray()
-      .put("OK-KUA")
-      .put("A6-EDO")
-      .put("OK-YBA")
-      .put("D-EBIL")
-      .put("D-ANKE")
-      .toString();
+
+    var array = new JSONArray();
+    var suggestions = fl48.suggest(params.get("term"));
+
+    suggestions.forEach(array::put);
+
+    return array.toString();
   }
 
   private String getAircraft(GeoPoint lb, GeoPoint rt, int retries) {
