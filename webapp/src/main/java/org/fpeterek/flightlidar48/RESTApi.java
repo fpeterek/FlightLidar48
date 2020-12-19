@@ -49,26 +49,47 @@ class RESTApi {
                 handler.render(data);
               })
             )
+            .prefix("search", getChain -> getChain.get(
+            handler -> {
+              handler.getResponse().getHeaders()
+                .set("Access-Control-Allow-Origin", "127.0.0.1, localhost")
+                .set("Access-Control-Allow-Methods", "GET, POST, PUT");
+              var data = search(handler.getRequest().getQueryParams());
+              handler.render(data);
+            })
+          )
         )
     );
+  }
+
+  private String search(MultiValueMap<String, String> params) {
+
+    var sr = fl48.search(params.getOrDefault("term", ""));
+
+    return JsonFormatter.searchResult(sr);
   }
 
   private String suggest(MultiValueMap<String, String> params) {
 
     var array = new JSONArray();
-    var suggestions = fl48.suggest(params.get("term"));
+    var suggestions = fl48.suggest(params.getOrDefault("term", ""));
 
     suggestions.forEach(array::put);
 
     return array.toString();
   }
 
-  private String getAircraft(GeoPoint lb, GeoPoint rt, int retries) {
+  private String getAircraft(GeoPoint lb, GeoPoint rt, String tracked, int retries) {
 
     List<Flight> aircraft;
+    SearchResult sr = null;
+
     try {
       Metrics.dbCalls.inc();
       aircraft = fl48.getFlights(lb, rt);
+      if (tracked != null && !tracked.isBlank()) {
+        sr = fl48.search(tracked);
+      }
     } catch (Exception e) {
 
       Metrics.failedCalls.inc();
@@ -77,20 +98,21 @@ class RESTApi {
       e.printStackTrace();
 
       if (retries > 0) {
-        return getAircraft(lb, rt, retries-1);
+        return getAircraft(lb, rt, tracked, retries-1);
       }
       System.out.println("Failed to fetch flight even after retry.");
       return JsonFormatter.error("Could not fetch aircraft from database.");
     }
 
-    return JsonFormatter.mapRecords(aircraft);
+    return JsonFormatter.mapRecords(aircraft, sr);
   }
 
   private String getAircraft(MultiValueMap<String, String> params) {
 
     final var lb = new GeoPoint(Double.parseDouble(params.get("lby")), Double.parseDouble(params.get("lbx")));
     final var rt = new GeoPoint(Double.parseDouble(params.get("rty")), Double.parseDouble(params.get("rtx")));
-    return getAircraft(lb, rt, 1);
+    final var tracked = params.getOrDefault("tracked", "");
+    return getAircraft(lb, rt, tracked, 1);
 
   }
 

@@ -47,8 +47,34 @@ public class DataProxy {
     return flights.searchByPrefix(prefix, limit);
   }
 
-  public List <Airport> searchAirports(String prefix, int limit) throws SQLException {
+  public List<Airport> searchAirports(String prefix, int limit) throws SQLException {
     return airports.searchByPrefix(prefix, limit);
+  }
+
+  public Airport findAirport(String icao) throws SQLException {
+    return airports.find(icao);
+  }
+
+  private Flight withCurrentAndAircraft(Flight fl) throws SQLException {
+    if (fl == null) {
+      return null;
+    }
+
+    fl = aircraft.withAircraft(fl);
+
+    if (fl == null) {
+      return null;
+    }
+
+    return current.withFlight(fl);
+  }
+
+  public Flight findFlight(String number) throws SQLException {
+    return withCurrentAndAircraft(flights.findFlight(number));
+  }
+
+  public Flight findFlightByAircraft(String registration) throws SQLException {
+    return withCurrentAndAircraft(flights.searchByAircraft(registration));
   }
 
 }

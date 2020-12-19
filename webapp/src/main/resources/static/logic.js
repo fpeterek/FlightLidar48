@@ -1,7 +1,10 @@
 let map;
 let markerLayer;
-let selected = null
-let aircraft = [];
+let selected = {
+    aircraft: null,
+    flight: null
+}
+let flights = [];
 
 function adjustLat(lat) {
     if (lat < -90) {
@@ -21,7 +24,7 @@ function adjustLon(lon) {
     return lon
 }
 
-class Aircraft {
+class Flight {
     constructor(jsonObject) {
         this.number = jsonObject.number
         this.departure = jsonObject.departure
@@ -34,6 +37,7 @@ class Aircraft {
         this.altitude = jsonObject.altitude
         this.direction = jsonObject.direction
         this.speed = jsonObject.speed
+        this.selected = false
     }
 
     estimatePosition(dt) {
@@ -74,34 +78,40 @@ class Aircraft {
 }
 
 function estimate(dt) {
-    for (let ac of aircraft) {
-        ac.estimatePosition(dt)
+    for (let fl of flights) {
+        fl.estimatePosition(dt)
     }
 }
 
 function render() {
     markerLayer.removeAll()
-    for (let ac of aircraft) {
-        markerLayer.addMarker(ac.asMarker())
+    for (let fl of flights) {
+        markerLayer.addMarker(fl.asMarker())
     }
     markerLayer.enable()
 }
 
-function toAircraftList(results) {
+function parseResults(results) {
     let lst = []
-    let selectedUpdate = false
     for (let res of results) {
-        let ac = new Aircraft(res)
-        lst.push(ac)
-        if (selected != null && ac.aircraft === selected.aircraft) {
-            selected = ac
-            selectedUpdate = true
-        }
-    }
-    if (!selectedUpdate) {
-        selected = false
+        let flight = new Flight(res)
+        lst.push(flight)
     }
     return lst
+}
+
+function updateSelected(tracked) {
+    if (tracked == null || tracked.flight == null || tracked.aircraft == null) {
+        return
+    }
+    selected.flight = new Flight(tracked.flight)
+    selected.aircraft = tracked.aircraft
+
+    for (let fl of flights) {
+        if (fl.number === selected.flight.number) {
+            fl.selected = true
+        }
+    }
 }
 
 function handleResponse(xhr) {
@@ -119,7 +129,8 @@ function handleResponse(xhr) {
         return estimate(1.0)
     }
 
-    aircraft = toAircraftList(parsed.results)
+    flights = parseResults(parsed.results)
+    updateSelected(parsed.tracked)
 }
 
 function getEncodedUrl(url) {
@@ -128,7 +139,13 @@ function getEncodedUrl(url) {
     let lby = vp.lby
     let rtx = vp.rtx
     let rty = vp.rty
-    return url + "?lbx=" + lbx + "&lby=" + lby + "&rtx=" + rtx + "&rty=" + rty
+    let encoded = url + "?lbx=" + lbx + "&lby=" + lby + "&rtx=" + rtx + "&rty=" + rty
+
+    if (selected.flight != null) {
+        encoded = encoded + "&term=" + encodeURIComponent(selected.flight.number)
+    }
+
+    return encoded
 }
 
 function createRequest() {
@@ -159,12 +176,28 @@ function handleSearchResponse(xhr) {
         return
     }
 
-    selected = new Aircraft(parsed.result)
-    map.setCenter(SMap.Coords.fromWGS84(selected.lat, selected.lon))
+    console.log("Search response received")
+    console.log(parsed)
+
+    if (parsed.tracked.airport != null) {
+        document.getElementById('out').innerText = parsed.tracked.airport
+    }
+
+    if (parsed.tracked.flight != null) {
+        selected.flight = new Flight(parsed.tracked.flight)
+        selected.flight.selected = true
+        flights = [selected.flight]
+        map.setCenter(SMap.Coords.fromWGS84(selected.flight.lat, selected.flight.lon))
+    }
+
+    if (parsed.aircraft != null) {
+        selected.aircraft = parsed.tracked.aircraft
+    }
 }
 
 function performSearch() {
-    let term = document.getElementById("sbox").innerText
+    console.log("Performing search")
+    let term = document.getElementById("sbox").value
     let xhr = createSearchRequest(term)
     xhr.onload = function() {
         handleSearchResponse(xhr)
@@ -175,6 +208,7 @@ function performSearch() {
     xhr.onerror = function(e) {
         console.log('Not found')
     }
+    xhr.send()
 }
 
 function update() {
