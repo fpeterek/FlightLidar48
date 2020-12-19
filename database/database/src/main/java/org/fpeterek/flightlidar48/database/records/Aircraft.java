@@ -16,7 +16,7 @@ public record Aircraft(
     LocalDate firstFlight,
     List<Flight> flights) {
 
-  int age() {
+  public int age() {
     final var now = DateTime.now();
     final var then = firstFlight.toDateTimeAtStartOfDay();
     final var diff = new Duration(then, now);
