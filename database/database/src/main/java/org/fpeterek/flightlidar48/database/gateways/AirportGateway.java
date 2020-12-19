@@ -40,6 +40,21 @@ public class AirportGateway extends Gateway {
     return (List)getAll();
   }
 
+  public Airport find(String icao) throws SQLException {
+
+    final var query = baseQuery() + " WHERE icao=?;";
+    PreparedStatement stmt = conn.prepareStatement(query);
+    stmt.setString(1, icao);
+
+    var rs = stmt.executeQuery();
+
+    if (rs.next()) {
+      return extractOne(rs);
+    }
+
+    return null;
+  }
+
   public Flight withAirports(Flight flight) throws SQLException {
 
     final var query = baseQuery() + " WHERE icao=? or icao=?;";
@@ -64,9 +79,9 @@ public class AirportGateway extends Gateway {
 
   public List<Airport> searchByPrefix(String prefix, int limit) throws SQLException {
 
-    final var query = baseQuery() + " WHERE icao like ? || '%' LIMIT ?;";
+    final var query = baseQuery() + " WHERE icao like ? LIMIT ?;";
     PreparedStatement stmt = conn.prepareStatement(query);
-    stmt.setString(1, prefix);
+    stmt.setString(1, prefix + "%");
     stmt.setInt(2, limit);
 
     final var result = new ArrayList<Airport>();

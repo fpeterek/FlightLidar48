@@ -41,9 +41,9 @@ public class AircraftGateway extends Gateway {
 
   public List<Aircraft> searchByPrefix(String prefix, int limit) throws SQLException {
 
-    final var query = baseQuery() + " WHERE registration like ? || '%' LIMIT ?;";
+    final var query = baseQuery() + " WHERE registration like ? LIMIT ?;";
     PreparedStatement stmt = conn.prepareStatement(query);
-    stmt.setString(1, prefix);
+    stmt.setString(1, prefix + "%");
     stmt.setInt(2, limit);
 
     final var result = new ArrayList<Aircraft>();

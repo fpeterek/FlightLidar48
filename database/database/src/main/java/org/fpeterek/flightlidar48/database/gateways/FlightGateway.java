@@ -176,12 +176,39 @@ public class FlightGateway extends Gateway {
     return result;
   }
 
+  public Flight findFlight(String number) throws SQLException {
+    final var query = baseQuery() + " WHERE number = ? AND current_flight IS NOT NULL;";
+    PreparedStatement stmt = conn.prepareStatement(query);
+    stmt.setString(1, number);
+
+    Flight fl = null;
+    var rs = stmt.executeQuery();
+
+    if (rs.next()) {
+      fl = extractOne(rs);
+    }
+
+    return fl;
+  }
+
+  public Flight searchByAircraft(String registration) throws SQLException {
+    final var query = baseQuery() + " WHERE aircraft = ? AND arrival IS NULL AND departure IS NOT NULL;";
+    PreparedStatement stmt = conn.prepareStatement(query);
+    stmt.setString(1, registration);
+
+    var rs = stmt.executeQuery();
+
+    if (rs.next()) {
+      return extractOne(rs);
+    }
+    return null;
+  }
 
   public List<Flight> searchByPrefix(String prefix, int limit) throws SQLException {
 
-    final var query = baseQuery() + " WHERE number like ? || '%' LIMIT ?;";
+    final var query = baseQuery() + " WHERE number like ? LIMIT ?;";
     PreparedStatement stmt = conn.prepareStatement(query);
-    stmt.setString(1, prefix);
+    stmt.setString(1, prefix + "%");
     stmt.setInt(2, limit);
 
     final var result = new ArrayList<Flight>();
