@@ -5,6 +5,7 @@ import org.fpeterek.flightlidar48.database.records.Airport;
 import org.fpeterek.flightlidar48.database.records.Flight;
 import org.fpeterek.flightlidar48.util.GeoPoint;
 
+import java.lang.reflect.GenericArrayType;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +21,11 @@ public class FlightLidar48 {
 
   public FlightLidar48() throws SQLException { }
 
-  public List<Flight> getFlights(GeoPoint lt, GeoPoint rb) throws SQLException {
-    var low = new GeoPoint(Math.min(lt.lat(), rb.lat()), Math.min(lt.lon(), rb.lon()));
-    var high = new GeoPoint(Math.max(lt.lat(), rb.lat()), Math.max(lt.lon(), rb.lon()));
+  public List<Flight> getFlights(GeoPoint lb, GeoPoint rt) throws SQLException {
+    var leftBottom = new GeoPoint(lb.lat(), (lb.lon() >= 0) ? lb.lon() : 360.0 + lb.lon());
+    var rightTop = new GeoPoint(rt.lat(), (rt.lon() >= 0) ? rt.lon() : 360.0 + rt.lon());
 
-    return dataproxy.getFlights(low, high);
+    return dataproxy.getFlights(leftBottom, rightTop);
   }
 
   private boolean isRegistrationPrefix(String prefix) {

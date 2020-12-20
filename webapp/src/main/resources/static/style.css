@@ -1,0 +1,6 @@
+#outTable, #outTable tr, #outTable td {
+    margin-top: 4px;
+    padding: 2px 5px 2px 10px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}

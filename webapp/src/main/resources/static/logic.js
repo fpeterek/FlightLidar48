@@ -16,10 +16,10 @@ function adjustLat(lat) {
 }
 
 function adjustLon(lon) {
-    if (lon > 360) {
-        return lon - 360
-    } else if (lon < 0) {
+    if (lon < -180) {
         return lon + 360
+    } else if (lon > 180) {
+        return lon - 360
     }
     return lon
 }
@@ -29,15 +29,14 @@ class Flight {
         this.number = jsonObject.number
         this.departure = jsonObject.departure
         this.origin = jsonObject.origin
-        this.departure = jsonObject.destination
+        this.destination = jsonObject.destination
         this.aircraft = jsonObject.aircraft
         this.lat = jsonObject.lat
-        this.lon = jsonObject.lon
+        this.lon = adjustLon(jsonObject.lon)
         this.squawk = jsonObject.squawk
         this.altitude = jsonObject.altitude
         this.direction = jsonObject.direction
         this.speed = jsonObject.speed
-        this.selected = false
     }
 
     estimatePosition(dt) {
@@ -64,7 +63,8 @@ class Flight {
             dist = 15-dist
         }
         let sprite = (this.direction + dist) % 360
-        return 'sprites/' + sprite + '.png'
+        let color = (selected.flight != null && this.number === selected.flight.number) ? 's' : ''
+        return 'sprites/' + sprite + color + '.png'
     }
 
     asMarker() {
@@ -73,6 +73,10 @@ class Flight {
             this.aircraft,
             {url: this.sprite()}
         )
+    }
+
+    mach() {
+        return this.speed * 0.001511784
     }
 
 }
@@ -107,11 +111,11 @@ function updateSelected(tracked) {
     selected.flight = new Flight(tracked.flight)
     selected.aircraft = tracked.aircraft
 
-    for (let fl of flights) {
-        if (fl.number === selected.flight.number) {
-            fl.selected = true
-        }
+    if (flights.length === 0) {
+        flights = [selected.flight]
     }
+
+    formatFlight()
 }
 
 function handleResponse(xhr) {
@@ -135,14 +139,14 @@ function handleResponse(xhr) {
 
 function getEncodedUrl(url) {
     let vp = map.getViewport()
-    let lbx = vp.lbx
+    let lbx = map.getZoom() > 3 ? vp.lbx : -180.0
     let lby = vp.lby
-    let rtx = vp.rtx
+    let rtx = map.getZoom() > 3 ? vp.rtx : 180.0
     let rty = vp.rty
     let encoded = url + "?lbx=" + lbx + "&lby=" + lby + "&rtx=" + rtx + "&rty=" + rty
 
     if (selected.flight != null) {
-        encoded = encoded + "&term=" + encodeURIComponent(selected.flight.number)
+        encoded = encoded + "&tracked=" + encodeURIComponent(selected.flight.number)
     }
 
     return encoded
@@ -162,6 +166,72 @@ function createSearchRequest(term) {
     return xhr
 }
 
+function createPair(row, label, text) {
+
+    let td1 = document.createElement('td')
+    td1.innerText = label
+    let td2 = document.createElement('td')
+    td2.innerText = text
+
+    row.appendChild(td1)
+    row.appendChild(td2)
+}
+
+function formatFlight() {
+    let table = document.createElement('table')
+    table.id = 'outTable'
+
+    let r1 = document.createElement('tr')
+    createPair(r1, 'Flight', selected.flight.number)
+    createPair(r1, 'Departure', selected.flight.departure)
+    createPair(r1, 'Origin', selected.flight.origin)
+    createPair(r1, 'Destination', selected.flight.destination)
+    table.appendChild(r1)
+
+    let r2 = document.createElement('tr')
+    createPair(r2, 'Latitude', Math.round(selected.flight.lat * 1000) / 1000)
+    createPair(r2, 'Longitude', Math.round(selected.flight.lon * 1000) / 1000)
+    createPair(r2, 'Squawk', selected.flight.squawk)
+    createPair(r2, 'Altitude', selected.flight.altitude + ' ft')
+    table.appendChild(r2)
+
+    let r3 = document.createElement('tr')
+    createPair(r3, 'Direction', selected.flight.direction)
+    createPair(r3, 'Speed', selected.flight.speed + ' kts')
+    createPair(r3, 'Mach', Math.round(selected.flight.mach() * 100) / 100)
+    createPair(r3, 'Aircraft', selected.aircraft.registration)
+    table.appendChild(r3)
+
+    let r4 = document.createElement('tr')
+    createPair(r4, 'MSN', selected.aircraft.msn)
+    createPair(r4, 'Airline', selected.aircraft.airline)
+    createPair(r4, 'Type', selected.aircraft.type)
+    createPair(r4, 'Age', selected.aircraft.age + ((selected.aircraft.age > 1) ? 'years' : 'year'))
+    table.appendChild(r4)
+
+    document.getElementById('out').innerHTML = ''
+    document.getElementById('out').appendChild(table)
+}
+
+function formatAirport(airport) {
+
+    let table = document.createElement('table')
+    table.id = 'outTable'
+
+    let createRow = function(label, text) {
+        let tr = document.createElement('tr')
+        createPair(tr, label, text)
+        return tr
+    }
+
+    table.appendChild(createRow('IATA', airport.iata))
+    table.appendChild(createRow('ICAO', airport.icao))
+    table.appendChild(createRow('Name', airport.name))
+
+    document.getElementById('out').innerHTML = ''
+    document.getElementById('out').appendChild(table)
+}
+
 function handleSearchResponse(xhr) {
     if (xhr.status !== 200) {
         console.log("Server responded with " + xhr.status)
@@ -177,21 +247,16 @@ function handleSearchResponse(xhr) {
     }
 
     console.log("Search response received")
-    console.log(parsed)
 
     if (parsed.tracked.airport != null) {
-        document.getElementById('out').innerText = parsed.tracked.airport
+        selected.flight = null
+        selected.aircraft = null
+        formatAirport(parsed.tracked.airport)
     }
 
     if (parsed.tracked.flight != null) {
-        selected.flight = new Flight(parsed.tracked.flight)
-        selected.flight.selected = true
-        flights = [selected.flight]
-        map.setCenter(SMap.Coords.fromWGS84(selected.flight.lat, selected.flight.lon))
-    }
-
-    if (parsed.aircraft != null) {
-        selected.aircraft = parsed.tracked.aircraft
+        updateSelected(parsed.tracked)
+        map.setCenter(SMap.Coords.fromWGS84(selected.flight.lon, selected.flight.lat))
     }
 }
 
@@ -240,7 +305,7 @@ function initMap() {
     map.addLayer(markerLayer)
     markerLayer.enable()
 
-    let sync = new SMap.Control.Sync({bottomSpace:40})
+    let sync = new SMap.Control.Sync({bottomSpace:100})
     map.addControl(sync)
 
     setInterval(update, 1000)
