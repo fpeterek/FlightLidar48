@@ -1,0 +1,39 @@
+plugins {
+    id 'application'
+    id 'java'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+}
+
+group 'org.fpeterek.flighlidar48.javaapp'
+version '1.0'
+
+sourceCompatibility = 14
+
+repositories {
+    mavenCentral()
+}
+
+javafx {
+    version = '14'
+    modules = [ 'javafx.controls', 'javafx.base', 'javafx.graphics', 'javafx.media' ]
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+mainClassName = 'org.fpeterek.flightlidar48.javaapp.FlightLidarApplication'
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.fpeterek.flightlidar48.javaapp.FlightLidarApplication'
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
