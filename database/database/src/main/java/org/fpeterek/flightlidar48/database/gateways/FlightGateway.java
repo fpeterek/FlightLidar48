@@ -155,16 +155,22 @@ public class FlightGateway extends Gateway {
 
   }
 
-  public List<Flight> fetchFlights(GeoPoint low, GeoPoint high) throws SQLException {
-    final var query = baseQuery() +
-      " JOIN current_flight cf ON cf.flight=flight.id WHERE ? < cf.lat AND cf.lat < ? AND ? < cf.lon AND cf.lon < ?;";
+  public List<Flight> fetchFlights(GeoPoint leftBottom, GeoPoint rightTop) throws SQLException {
+    var query = baseQuery();
+    if (leftBottom.lon() < rightTop.lon()) {
+      query = query +
+        " JOIN current_flight cf ON cf.flight=flight.id WHERE ? < cf.lat AND cf.lat < ? AND ? < cf.lon AND cf.lon < ?;";
+    } else {
+      query = query +
+        " JOIN current_flight cf ON cf.flight=flight.id WHERE ? < cf.lat AND cf.lat < ? AND (? < cf.lon OR cf.lon < ?);";
+    }
 
     var stmt = conn.prepareStatement(query);
 
-    stmt.setDouble(1, low.lat());
-    stmt.setDouble(2, high.lat());
-    stmt.setDouble(3, low.lon());
-    stmt.setDouble(4, high.lon());
+    stmt.setDouble(1, leftBottom.lat());
+    stmt.setDouble(2, rightTop.lat());
+    stmt.setDouble(3, leftBottom.lon());
+    stmt.setDouble(4, rightTop.lon());
 
     var rs = stmt.executeQuery();
     var result = new ArrayList<Flight>();
@@ -177,7 +183,7 @@ public class FlightGateway extends Gateway {
   }
 
   public Flight findFlight(String number) throws SQLException {
-    final var query = baseQuery() + " WHERE number = ? AND current_flight IS NOT NULL;";
+    final var query = baseQuery() + " WHERE number = ? AND arrival IS NULL AND departure IS NOT NULL;";
     PreparedStatement stmt = conn.prepareStatement(query);
     stmt.setString(1, number);
 
