@@ -7,9 +7,11 @@ plugins {
 group 'org.fpeterek.flighlidar48.javaapp'
 version '1.0'
 
+targetCompatibility = 14
 sourceCompatibility = 14
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -19,8 +21,26 @@ javafx {
 }
 
 dependencies {
+    implementation 'org.fpeterek.flightlidar48.database:database:1.0'
+    implementation 'org.json:json:20200518'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+compileJava {
+    options.compilerArgs += ['--enable-preview']
+}
+
+tasks.withType(JavaCompile).each {
+    it.options.compilerArgs += '--enable-preview'
+}
+
+tasks.withType(Test).all {
+    jvmArgs += '--enable-preview'
+}
+
+tasks.withType(JavaExec) {
+    jvmArgs += '--enable-preview'
 }
 
 mainClassName = 'org.fpeterek.flightlidar48.javaapp.FlightLidarApplication'
@@ -31,6 +51,7 @@ jar {
     }
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
