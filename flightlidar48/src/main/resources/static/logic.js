@@ -1,10 +1,12 @@
-let map;
-let markerLayer;
+let map
+let markerLayer
+let mouse
+
 let selected = {
     aircraft: null,
     flight: null
 }
-let flights = [];
+let flights = []
 
 function adjustLat(lat) {
     if (lat < -90) {
@@ -40,38 +42,49 @@ class Flight {
     }
 
     estimatePosition(dt) {
-        let kmh = (this.speed * 1.852) / 3.6
+        let mps = (this.speed * 1.852) / 3.6
         let dir = this.direction * (Math.PI/180)
-        let dx = kmh * dt * Math.cos(dir)
-        let dy = kmh * dt * Math.sin(dir)
+        let dx = mps * dt * Math.cos(dir)
+        let dy = mps * dt * Math.sin(dir)
 
         let deltaLat = dy / 6378000 * 180 * Math.PI
-        let newLat = this.lat + deltaLat
+        let newLat = adjustLat(this.lat + deltaLat)
 
         let deltaLon = (dx / 6378000 * 180 * Math.PI) / Math.cos(newLat * (Math.PI/180))
-        let newLon = this.lon + deltaLon
+        let newLon = adjustLon(this.lon + deltaLon)
 
-        this.lat = adjustLat(newLat)
-        this.lon = adjustLon(newLon)
+        this.lat = newLat
+        this.lon = newLon
     }
 
     sprite() {
         let dist = this.direction % 15
-        if (dist <= 7) {
-            dist = -dist
-        } else {
-            dist = 15-dist
-        }
+        dist = (dist <= 7) ? (-dist) : (15-dist)
+
         let sprite = (this.direction + dist) % 360
         let color = (selected.flight != null && this.number === selected.flight.number) ? 's' : ''
         return 'sprites/' + sprite + color + '.png'
     }
 
     asMarker() {
+
+        let marker = JAK.mel("div")
+        let img = JAK.mel("img", {src: this.sprite()})
+        marker.appendChild(img)
+
+        let text = JAK.mel(
+            "div",
+            {},
+            { position: "absolute", left: "-14px", top: "35px", textAlign: "center", color: "white", fontWeight: "bold",
+              width: "60px", backgroundColor: "black", fontSize: "13px" }
+        )
+        text.innerHTML = this.aircraft
+        marker.appendChild(text)
+
         return new SMap.Marker(
             SMap.Coords.fromWGS84(this.lon, this.lat),
-            this.aircraft,
-            {url: this.sprite()}
+            this.number,
+            {url: marker}
         )
     }
 
@@ -206,7 +219,7 @@ function formatFlight() {
     createPair(r4, 'MSN', selected.aircraft.msn)
     createPair(r4, 'Airline', selected.aircraft.airline)
     createPair(r4, 'Type', selected.aircraft.type)
-    createPair(r4, 'Age', selected.aircraft.age + ((selected.aircraft.age > 1) ? 'years' : 'year'))
+    createPair(r4, 'Age', selected.aircraft.age + ((selected.aircraft.age > 1) ? ' years' : ' year'))
     table.appendChild(r4)
 
     document.getElementById('out').innerHTML = ''
@@ -307,6 +320,20 @@ function initMap() {
 
     let sync = new SMap.Control.Sync({bottomSpace:100})
     map.addControl(sync)
+
+    mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM)
+    map.addControl(mouse)
+
+    map.getSignals().addListener(this, "marker-click", function(e) {
+        let marker = e.target
+        let flight = marker.getId()
+
+        for (let fl of flights) {
+            if (fl.number == flight) {
+                selected.flight = fl
+            }
+        }
+    })
 
     setInterval(update, 1000)
 }
