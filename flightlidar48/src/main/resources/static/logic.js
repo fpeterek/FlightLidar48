@@ -329,8 +329,9 @@ function initMap() {
         let flight = marker.getId()
 
         for (let fl of flights) {
-            if (fl.number == flight) {
+            if (fl.number === flight) {
                 selected.flight = fl
+                render()
             }
         }
     })

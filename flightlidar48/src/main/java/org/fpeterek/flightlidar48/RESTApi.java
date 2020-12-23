@@ -63,10 +63,9 @@ class RESTApi {
   }
 
   private String search(MultiValueMap<String, String> params) {
-
-    var sr = fl48.search(params.getOrDefault("term", ""));
-
-    return JsonFormatter.searchResult(sr);
+    return JsonFormatter.searchResult(
+      fl48.search(params.getOrDefault("term", ""))
+    );
   }
 
   private String suggest(MultiValueMap<String, String> params) {
